@@ -345,18 +345,12 @@ async function syncCalendar(){
   if(!accessToken)return;
   const errEl=document.getElementById('calError');
   try{
-    const calsData=await apiGet('https://www.googleapis.com/calendar/v3/users/me/calendarList');
+const calsData=await apiGet('https://www.googleapis.com/calendar/v3/users/me/calendarList');
     const allCals=calsData.items||[];
-    console.log('Available calendars:',allCals.map(c=>c.summary));
-    // Flexible match — find any cal with "affiliate" OR "mailing" OR "launch" in name
-    const cal=allCals.find(c=>{
-      const s=(c.summary||'').toLowerCase();
-      return s.includes('affiliate')||s.includes('mailing')||s.includes('launch');
-    })||allCals.find(c=>(c.summary||'').toLowerCase().includes('jv'));
+    const cal=allCals.find(c=>c.id==='h5rsh85qr12dcgrv35k9pa1a4s@group.calendar.google.com');
     if(!cal){
-      const names=allCals.map(c=>'"'+c.summary+'"').join(', ');
-      if(errEl){errEl.style.display='block';errEl.innerHTML='<div class="alert alert-warn"><i class="ti ti-alert-triangle"></i>Calendar not found. Available calendars: '+names+'. Rename your calendar to include "Affiliate" or "Mailing" in the name.</div>';}
-      console.warn('No matching calendar found. Available:',names);
+      if(errEl){errEl.style.display='block';errEl.innerHTML='<div class="alert alert-warn"><i class="ti ti-alert-triangle"></i>Affiliate Launch Mailings Calendar not found. Make sure it is shared with your Google account.</div>';}
+      console.warn('Affiliate Launch Mailings Calendar not found. Available:',allCals.map(c=>c.summary));
       return;
     }
     if(errEl)errEl.style.display='none';
