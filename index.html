@@ -405,3 +405,186 @@ function parsePartnerTab(raw){
   //                                  blank row with "YOM Stats..." in col G → header row → data rows → TOTALS row
   const yearMap={};let curYear='';
   raw.forEach(row=>{
+    if(!row)return;
+    const c0=String(row[0]||'').trim();
+    const c1=String(row[1]||'').trim();
+    const c6=String(row[6]||'').trim();
+    // Year row
+    if(/^20\d\d$/.test(c0)&&!c1){curYear=c0;if(!yearMap[curYear])yearMap[curYear]={year:curYear,their:{title:'',rows:[],totals:null},yom:{title:'',rows:[],totals:null}};return;}
+    if(!curYear)return;
+    const y=yearMap[curYear];
+    // Their section header (col B contains "Stats Results for")
+    if(!c0&&c1.toLowerCase().includes('stats results')){y.their.title=c1;return;}
+    // YOM section header (col G contains "Stats Results")
+    if(!c0&&c6.toLowerCase().includes('stats results')){y.yom.title=c6;return;}
+    // Skip pure header rows (Program, Clicks...)
+    if(c0.toLowerCase()==='program')return;
+    // TOTALS row — assign to whichever section was most recently active
+    if(c0.toUpperCase()==='TOTALS'){
+      // Check which cols have data — their=cols 1-4, yom=cols 6-10
+      if(row[1]||row[4])y.their.totals=row;
+      if(row[6]||row[9])y.yom.totals=row;
+      return;
+    }
+    // Data rows: col A has program name
+    if(c0&&c0.toUpperCase()!=='TOTALS'){
+      // Their data: cols 0-4
+      if(row[1]!==undefined)y.their.rows.push({program:row[0],clicks:row[1],uLeads:row[2],rawLeads:row[3],commission:row[4]});
+      // YOM data: cols 6-10
+      if(row[6]!==undefined)y.yom.rows.push({program:row[6],clicks:row[7],uLeads:row[8],rawLeads:row[9],commission:row[10]});
+    }
+  });
+  // Return most recent 2 years, newest first
+  return Object.values(yearMap).sort((a,b)=>b.year-a.year).slice(0,2);
+}
+
+function renderStatsTable(section,label){
+  if(!section||(!section.rows.length&&!section.totals)){
+    return'<div class="section-label">'+label+'</div><div style="font-size:12px;color:var(--text-secondary);padding:6px 0">No data found</div>';
+  }
+  let h='<div class="section-label">'+label+(section.title?' — '+section.title:'')+'</div>';
+  h+='<table class="stats-table"><thead><tr><th>Program</th><th>Clicks</th><th>Unique Leads</th><th>Raw Leads</th><th>Commission</th></tr></thead><tbody>';
+  section.rows.forEach(r=>{h+='<tr><td>'+(r.program||'—')+'</td><td>'+(r.clicks||'—')+'</td><td>'+(r.uLeads||'—')+'</td><td>'+(r.rawLeads||'—')+'</td><td>'+(r.commission||'—')+'</td></tr>';});
+  if(section.totals){
+    const t=section.totals;
+    // Their totals at cols 0-4, yom totals at cols 6-10
+    const isYom=label.toLowerCase().includes('yom');
+    const offset=isYom?6:0;
+    h+='<tr class="totals-row"><td>TOTALS</td><td>'+(t[offset+1]||'—')+'</td><td>'+(t[offset+2]||'—')+'</td><td>'+(t[offset+3]||'—')+'</td><td>'+(t[offset+4]||'—')+'</td></tr>';
+  }
+  h+='</tbody></table>';
+  return h;
+}
+
+function numVal(v){if(!v)return null;const n=parseFloat(String(v).replace(/[$,]/g,''));return isNaN(n)?null:n;}
+
+function renderYoY(yearBlocks){
+  if(yearBlocks.length<2)return'';
+  const y1=yearBlocks[0],y2=yearBlocks[1];
+  const theirClicks1=numVal(y1.their.totals?.[1])||y1.their.rows.reduce((s,r)=>s+(numVal(r.clicks)||0),0);
+  const theirClicks2=numVal(y2.their.totals?.[1])||y2.their.rows.reduce((s,r)=>s+(numVal(r.clicks)||0),0);
+  const yomClicks1=numVal(y1.yom.totals?.[7])||y1.yom.rows.reduce((s,r)=>s+(numVal(r.clicks)||0),0);
+  const yomClicks2=numVal(y2.yom.totals?.[7])||y2.yom.rows.reduce((s,r)=>s+(numVal(r.clicks)||0),0);
+  function yoyItem(label,v1,v2){
+    if(!v1||!v2)return'';
+    const diff=v1-v2;const pct=Math.round((diff/v2)*100);
+    const cls=diff>0?'yoy-up':diff<0?'yoy-down':'yoy-neutral';
+    const arrow=diff>0?'↑':diff<0?'↓':'→';
+    return'<div class="yoy-item"><div class="yoy-item-label">'+label+'</div><div class="yoy-item-value '+cls+'">'+arrow+' '+Math.abs(pct)+'% ('+y2.year+': '+v2.toLocaleString()+' → '+y1.year+': '+v1.toLocaleString()+')</div></div>';
+  }
+  const items=[yoyItem('Their clicks for YOM',theirClicks1,theirClicks2),yoyItem('YOM clicks for them',yomClicks1,yomClicks2)].filter(Boolean);
+  if(!items.length)return'';
+  return'<div class="yoy-bar"><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-secondary);width:100%;margin-bottom:2px">Year-over-year click comparison</div>'+items.join('')+'</div>';
+}
+
+function refreshPartners(){
+  const ptabs=sheetData.partnerTabs||[];
+  if(!ptabs.length)return;
+  const inRows=sheetData.inbound||[];
+  const bRows=sheetData.outboundB||[];
+
+  document.getElementById('partnerProfiles').innerHTML=ptabs.map(tab=>{
+    const raw=sheetData.partnerStats?.[tab]||[];
+    const yearBlocks=parsePartnerTab(raw);
+
+    // Header summary from Sheet 1 — find matching row by partner name
+    const tabFirst=tab.toLowerCase().split(' ')[0];
+    const inRow=inRows.find(r=>r&&r[1]&&r[1].toLowerCase().includes(tabFirst));
+    const yomClicks=inRow?inRow[22]:'—';
+    const yomSales=inRow?inRow[4]:'—';
+    const yomEPC=inRow?inRow[25]:'—';
+
+    // Internal mailing matches from Sheet 5
+    const bMatch=bRows.filter(r=>r&&r[1]&&r[1].toLowerCase().includes(tabFirst));
+
+    const pid='pp_'+tab.replace(/[^a-z0-9]/gi,'_');
+
+    // Year blocks HTML
+    const yearsHtml=yearBlocks.length?yearBlocks.map(yb=>`
+      <div class="year-block">
+        <div class="year-label">${yb.year}</div>
+        <div class="two-col" style="margin-bottom:0">
+          <div>${renderStatsTable(yb.their,'Their Stats for YOM')}</div>
+          <div>${renderStatsTable(yb.yom,'YOM Stats for Them')}</div>
+        </div>
+      </div>`).join(''):'<div style="font-size:12px;color:var(--text-secondary);padding:8px">No launch data found in this tab. Check that the tab name matches exactly.</div>';
+
+    return`<div class="partner-profile" id="${pid}">
+      <div class="partner-profile-header" onclick="toggleProfile(this)">
+        <div class="partner-profile-name"><i class="ti ti-chevron-right" style="font-size:14px;transition:transform 0.2s"></i>${tab}</div>
+        <div style="display:flex;gap:16px;align-items:center">
+          <span style="font-size:11px;color:var(--text-secondary)">YOM Clicks: <strong>${yomClicks}</strong></span>
+          <span style="font-size:11px;color:var(--text-secondary)">Sales: <strong>${yomSales}</strong></span>
+          <span style="font-size:11px;color:var(--text-secondary)">EPC: <strong>${yomEPC}</strong></span>
+          <a href="https://docs.google.com/spreadsheets/d/${SID.outboundA}" target="_blank" onclick="event.stopPropagation()" style="font-size:11px;color:var(--blue-text);text-decoration:none"><i class="ti ti-external-link" style="font-size:13px"></i></a>
+        </div>
+      </div>
+      <div class="partner-profile-body">
+        ${yearsHtml}
+        ${renderYoY(yearBlocks)}
+        ${bMatch.length?`<div style="margin-top:1rem"><div class="section-label">Internal mailing data — Sheet 5 (last ${Math.min(bMatch.length,5)} mailings)</div><div class="table-wrap"><table class="stats-table"><thead><tr><th>Date</th><th>Subject</th><th>Sent</th><th>Opens</th><th>% Open</th><th>Clicks</th><th>% CTR</th><th>EPC</th></tr></thead><tbody>${bMatch.slice(-5).map(r=>`<tr><td>${r[0]||'—'}</td><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r[2]||'—'}</td><td>${r[4]||'—'}</td><td>${r[5]||'—'}</td><td>${r[6]||'—'}</td><td>${r[7]||'—'}</td><td>${r[8]||'—'}</td><td>${r[20]||'—'}</td></tr>`).join('')}</tbody></table></div></div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleProfile(h){const b=h.nextElementSibling;const i=h.querySelector('i');b.classList.toggle('open');i.style.transform=b.classList.contains('open')?'rotate(90deg)':'';}
+function filterPartnerProfiles(v){document.querySelectorAll('.partner-profile').forEach(p=>{p.style.display=p.querySelector('.partner-profile-name').textContent.toLowerCase().includes(v.toLowerCase())?'':'none';});}
+
+function refreshInbound(){
+  const rows=sheetData.inbound||[];if(rows.length<2)return;
+  document.getElementById('inboundTbody').innerHTML=rows.filter(r=>r&&r[1]&&r[1]!=='Partner').map(r=>`<tr><td class="name-cell">${r[1]||'—'}</td><td>${r[2]||'—'}</td><td>${r[4]||'—'}</td><td>${r[22]||'—'}</td><td>${r[23]||'—'}</td><td>${r[24]||'—'}</td><td>${r[25]||'—'}</td><td>${r[26]||'—'}</td></tr>`).join('');
+}
+
+function refreshOutbound(){
+  const rows=sheetData.requests||[];if(rows.length<2)return;
+  document.getElementById('outboundTbody').innerHTML=rows.filter(r=>r&&r[0]&&r[0]!=='Affiliate').map(r=>{
+    const cv=(r[2]||'').toLowerCase();const sc=cv.includes('yes')?'b-confirmed':cv.includes('no')?'b-declined':'b-pending';
+    const ck=(r[8]||'').toLowerCase();const cc=ck.includes('1st')?'b-1st':ck.includes('last')?'b-last':ck.includes('rec')?'b-rec':'b-evgrn';
+    return`<tr><td class="name-cell">${r[0]}</td><td>${r[1]||'—'}</td><td><span class="badge ${sc}">${r[2]||'—'}</span></td><td>${r[4]||'—'}</td><td>${r[5]||'—'}</td><td><span class="badge ${cc}">${r[8]||'—'}</span></td><td style="font-size:12px;color:var(--text-secondary)">${r[6]||''}</td></tr>`;
+  }).join('');
+}
+
+function refreshOnboarding(){
+  const conf=(sheetData.confirmed||[]).filter(r=>r[1]&&r[1]!=='NAME');
+  document.getElementById('confirmedCount').textContent=conf.length;
+  document.getElementById('confirmedTbody').innerHTML=conf.map(r=>{const cv=(r[7]||'').toLowerCase();const sc=cv==='yes'||cv==='y'?'b-confirmed':cv==='no'||cv==='n'?'b-declined':'b-pending';return`<tr><td class="name-cell">${r[1]||'—'}</td><td>${r[0]||'—'}</td><td><span class="badge ${sc}">${r[7]||'—'}</span></td><td>${r[12]||'—'}</td><td>${r[16]||'—'}</td><td style="font-size:12px;color:var(--text-secondary)">${r[8]||''}</td></tr>`;}).join('')||'<tr><td colspan="6" style="text-align:center;padding:1rem;color:var(--text-secondary)">No confirmed partners found</td></tr>';
+  const decl=(sheetData.declined||[]).filter(r=>r[1]&&r[1]!=='NAME');
+  document.getElementById('declinedCount').textContent=decl.length;
+  document.getElementById('declinedTbody').innerHTML=decl.map(r=>`<tr><td class="name-cell">${r[1]||'—'}</td><td>${r[0]||'—'}</td><td style="font-size:12px;color:var(--text-secondary)">${r[8]||''}</td></tr>`).join('')||'<tr><td colspan="3" style="text-align:center;padding:1rem;color:var(--text-secondary)">No declined partners found</td></tr>';
+}
+
+function filterOnboarding(v){['confirmedTbody','declinedTbody'].forEach(id=>{document.querySelectorAll('#'+id+' tr').forEach(r=>{r.style.display=(r.cells[0]?.textContent||'').toLowerCase().includes(v.toLowerCase())?'':'none';});});}
+function filterOnboardingByStatus(v){document.getElementById('confirmedPanel').style.display=(v===''||v==='confirmed')?'':'none';document.getElementById('declinedPanel').style.display=(v===''||v==='declined')?'':'none';}
+
+function renderCalendar(){
+  document.getElementById('calMonthLabel').textContent=MONTHS[calMonth]+' '+calYear;
+  const first=new Date(calYear,calMonth,1).getDay();
+  const dim=new Date(calYear,calMonth+1,0).getDate();
+  const monthEvents=calEvents.filter(e=>{const d=new Date(e.date+'T00:00:00');return d.getFullYear()===calYear&&d.getMonth()===calMonth;});
+  let html=DAYS.map(d=>'<div class="cal-hdr">'+d+'</div>').join('');
+  for(let i=0;i<first;i++)html+='<div></div>';
+  for(let d=1;d<=dim;d++){
+    const ds=calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const dayEvs=monthEvents.filter(e=>e.date===ds);
+    html+='<div class="cal-day'+(dayEvs.length?' has-event':'')+'"><div class="cal-num">'+d+'</div>';
+    dayEvs.forEach(e=>{html+='<div class="cal-entry" title="'+e.title+'">'+e.title+'</div>';});
+    html+='</div>';
+  }
+  document.getElementById('calGrid').innerHTML=html;
+  const listEl=document.getElementById('calEventList');
+  if(!calEvents.length){listEl.innerHTML='<div class="empty-state" style="padding:1.5rem"><p>No calendar events loaded yet — click Sync or sign in.</p></div>';return;}
+  if(!monthEvents.length){listEl.innerHTML='<div class="empty-state" style="padding:1.5rem"><p>No events this month'+(sheetData.calName?' in "'+sheetData.calName+'"':'')+'.</p></div>';return;}
+  listEl.innerHTML=monthEvents.sort((a,b)=>a.date.localeCompare(b.date)).map(e=>{const d=new Date(e.date+'T00:00:00');return'<div class="event-list-item"><div class="event-dot"></div><div class="event-date-label">'+DAYS[d.getDay()]+' '+(d.getMonth()+1)+'/'+d.getDate()+'</div><div>'+e.title+'</div></div>';}).join('');
+}
+
+function prevMonth(){calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
+function nextMonth(){calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCalendar();}
+function switchTab(name,btn){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');showTab(name);}
+function showTab(name){document.querySelectorAll('[id^="tab-"]').forEach(el=>el.style.display='none');const el=document.getElementById('tab-'+name);if(el)el.style.display='block';if(name==='calendar')renderCalendar();}
+function switchTabByName(name){document.querySelectorAll('.tab-btn').forEach(btn=>{if(btn.getAttribute('onclick')?.includes("'"+name+"'"))btn.click();});}
+function filterTable(id,v,col){document.querySelectorAll('#'+id+' tr').forEach(r=>{r.style.display=(r.cells[col]?.textContent||'').toLowerCase().includes(v.toLowerCase())?'':'none';});}
+function filterTableByCol(id,v,col){if(!v){document.querySelectorAll('#'+id+' tr').forEach(r=>r.style.display='');return;}document.querySelectorAll('#'+id+' tr').forEach(r=>{r.style.display=(r.cells[col]?.textContent||'').toLowerCase().includes(v.toLowerCase())?'':'none';});}
+</script>
+</body>
+</html>
