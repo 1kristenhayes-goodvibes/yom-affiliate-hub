@@ -36,8 +36,6 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg-tertiary); color: var(--text-primary); font-size: 14px; min-height: 100vh; }
-
-  /* Layout */
   .hub-header { background: var(--bg-primary); border-bottom: 0.5px solid var(--border); padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; height: 52px; position: sticky; top: 0; z-index: 50; }
   .hub-logo { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
   .hub-logo span { color: var(--text-secondary); font-weight: 400; }
@@ -45,46 +43,36 @@
   .sync-status { font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 5px; }
   .sync-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
   .dot-off { background: #E24B4A; } .dot-on { background: #639922; } .dot-busy { background: #EF9F27; }
-
   .hub-tabs { background: var(--bg-primary); border-bottom: 0.5px solid var(--border); padding: 0 1.5rem; display: flex; overflow-x: auto; position: sticky; top: 52px; z-index: 40; }
   .tab-btn { padding: 14px 16px 12px; font-size: 13px; border: none; background: transparent; cursor: pointer; color: var(--text-secondary); border-bottom: 2px solid transparent; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
   .tab-btn:hover { color: var(--text-primary); }
   .tab-btn.active { color: var(--text-primary); font-weight: 500; border-bottom-color: var(--text-primary); }
   .tab-btn i { font-size: 15px; }
   .tab-badge { font-size: 10px; background: var(--red-bg); color: var(--red-text); border-radius: 10px; padding: 1px 6px; font-weight: 500; }
-
   .hub-content { padding: 1.5rem; max-width: 1400px; }
-
-  /* Components */
   .btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: var(--radius-md); border: 0.5px solid var(--border-md); background: transparent; cursor: pointer; font-size: 13px; color: var(--text-primary); }
   .btn:hover { background: var(--bg-secondary); }
   .btn.primary { background: var(--text-primary); color: var(--bg-primary); border-color: var(--text-primary); }
   .btn.primary:hover { opacity: 0.85; }
   .btn i { font-size: 15px; }
   .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
   .panel { background: var(--bg-primary); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; }
   .panel-title { font-size: 13px; font-weight: 500; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; }
   .panel-title-left { display: flex; align-items: center; gap: 6px; color: var(--text-secondary); }
   .panel-title-left i { font-size: 15px; }
-
   .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
   .metric-card { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 1rem; }
   .metric-label { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
   .metric-value { font-size: 24px; font-weight: 500; line-height: 1; }
   .metric-sub { font-size: 11px; color: var(--text-secondary); margin-top: 4px; }
-
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
   @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
-
   .alert { padding: 10px 14px; border-radius: var(--radius-md); font-size: 13px; display: flex; align-items: flex-start; gap: 8px; margin-bottom: 10px; }
   .alert i { font-size: 16px; margin-top: 1px; flex-shrink: 0; }
   .alert-warn { background: var(--amber-bg); color: var(--amber-text); }
   .alert-info { background: var(--blue-bg); color: var(--blue-text); }
   .alert-success { background: var(--green-bg); color: var(--green-text); }
   .alert-error { background: var(--red-bg); color: var(--red-text); }
-
-  /* Badges */
   .badge { font-size: 10px; padding: 2px 7px; border-radius: 10px; font-weight: 500; white-space: nowrap; }
   .b-1st { background: var(--blue-bg); color: var(--blue-text); }
   .b-last { background: var(--green-bg); color: var(--green-text); }
@@ -94,8 +82,6 @@
   .b-pending { background: var(--amber-bg); color: var(--amber-text); }
   .b-sent { background: var(--blue-bg); color: var(--blue-text); }
   .b-none { background: var(--gray-bg); color: var(--gray-text); }
-
-  /* Tables */
   .table-wrap { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; }
   th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); font-weight: 500; padding: 8px 10px; text-align: left; border-bottom: 0.5px solid var(--border); white-space: nowrap; }
@@ -103,22 +89,16 @@
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: var(--bg-secondary); }
   .name-cell { font-weight: 500; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-  /* Filter bar */
   .filter-bar { display: flex; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
   .filter-bar input, .filter-bar select { padding: 7px 10px; border: 0.5px solid var(--border-md); border-radius: var(--radius-md); font-size: 13px; background: var(--bg-primary); color: var(--text-primary); }
   .filter-bar input { flex: 1; min-width: 160px; }
-
-  /* Schedule builder */
   .form-group { display: flex; flex-direction: column; gap: 4px; }
   .form-group label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-secondary); font-weight: 500; }
   .form-group input, .form-group select { padding: 7px 10px; border: 0.5px solid var(--border-md); border-radius: var(--radius-md); font-size: 13px; background: var(--bg-primary); color: var(--text-primary); }
   .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--text-primary); }
-
   .partner-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: flex-end; padding: 10px; background: var(--bg-secondary); border-radius: var(--radius-md); margin-bottom: 6px; }
   .partner-row .form-group { flex: 1; min-width: 100px; }
   .partner-row .form-group.narrow { max-width: 70px; }
-
   .schedule-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid var(--border); }
   .schedule-item:last-child { border-bottom: none; }
   .schedule-date { min-width: 70px; font-size: 12px; font-weight: 500; }
@@ -126,8 +106,6 @@
   .schedule-entries { flex: 1; display: flex; flex-direction: column; gap: 4px; }
   .schedule-entry { font-size: 12px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
   .warn-item { background: var(--amber-bg); color: var(--amber-text); border-radius: var(--radius-md); padding: 6px 10px; font-size: 12px; display: flex; gap: 6px; margin-bottom: 6px; }
-
-  /* Calendar */
   .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
   .cal-hdr { font-size: 11px; text-align: center; padding: 4px; color: var(--text-secondary); font-weight: 500; }
   .cal-day { min-height: 72px; background: var(--bg-primary); border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 4px 5px; font-size: 10px; }
@@ -145,8 +123,6 @@
   .cal-legend { display: flex; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
   .cal-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-secondary); }
   .cal-legend-dot { width: 10px; height: 10px; border-radius: 2px; }
-
-  /* Pipeline */
   .pipeline-cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
   @media (max-width: 680px) { .pipeline-cols { grid-template-columns: 1fr 1fr; } }
   .pipe-col { background: var(--bg-secondary); border-radius: var(--radius-lg); padding: 0.75rem; }
@@ -155,25 +131,18 @@
   .pipe-card { background: var(--bg-primary); border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 8px 10px; margin-bottom: 6px; font-size: 12px; }
   .pipe-card-name { font-weight: 500; margin-bottom: 2px; }
   .pipe-card-detail { color: var(--text-secondary); font-size: 11px; }
-
-  /* Sheet links */
   .sheet-links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 1rem; }
   .sheet-link { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-secondary); border: 0.5px solid var(--border); border-radius: 10px; padding: 3px 9px; text-decoration: none; }
   .sheet-link:hover { background: var(--bg-secondary); color: var(--text-primary); }
-
   .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-secondary); }
   .empty-state i { font-size: 32px; display: block; margin-bottom: 0.75rem; }
   .empty-state p { font-size: 13px; }
-
-  /* Mailing list */
   .mail-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid var(--border); }
   .mail-item:last-child { border-bottom: none; }
   .mail-date { font-size: 12px; font-weight: 500; min-width: 32px; text-align: center; background: var(--bg-secondary); border-radius: var(--radius-md); padding: 4px 6px; }
   .mail-info { flex: 1; }
   .mail-info .pname { font-weight: 500; font-size: 13px; }
   .mail-info .pdetail { font-size: 11px; color: var(--text-secondary); }
-
-  /* Sign-in screen */
   .signin-screen { display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 52px); padding: 2rem; }
   .signin-card { background: var(--bg-primary); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem; max-width: 440px; width: 100%; text-align: center; }
   .signin-card h1 { font-size: 20px; font-weight: 600; margin-bottom: 0.5rem; }
@@ -187,29 +156,21 @@
   .google-btn { display: inline-flex; align-items: center; gap: 10px; background: #4285F4; color: white; border: none; border-radius: var(--radius-md); padding: 11px 24px; font-size: 14px; font-weight: 500; cursor: pointer; width: 100%; justify-content: center; }
   .google-btn:hover { background: #3367d6; }
   .google-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
-
   .divider { height: 0.5px; background: var(--border); margin: 1rem 0; }
   .section-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
   .section-title { font-size: 15px; font-weight: 500; }
   .section-actions { display: flex; gap: 8px; }
-
-  /* Spinner */
   .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--border-md); border-top-color: var(--text-primary); border-radius: 50%; animation: spin 0.6s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* Loading overlay */
   #loadingOverlay { position: fixed; inset: 0; background: var(--bg-primary); z-index: 200; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; }
   #loadingOverlay p { font-size: 14px; color: var(--text-secondary); }
 </style>
 </head>
 <body>
-
 <div id="loadingOverlay">
   <div class="spinner" style="width:28px;height:28px;border-width:3px;"></div>
   <p>Loading Affiliate Command Hub...</p>
 </div>
-
-<!-- Header -->
 <div class="hub-header">
   <div class="hub-logo">Affiliate Command Hub <span>/ YOM Partner Operations</span></div>
   <div class="header-right">
@@ -224,8 +185,6 @@
     <button class="btn" id="syncBtn" onclick="syncAllSheets()" style="display:none"><i class="ti ti-refresh"></i> Sync now</button>
   </div>
 </div>
-
-<!-- Tabs -->
 <div class="hub-tabs" id="hubTabs" style="display:none">
   <button class="tab-btn active" onclick="switchTab('dashboard',this)"><i class="ti ti-layout-dashboard"></i> Dashboard</button>
   <button class="tab-btn" onclick="switchTab('schedule',this)"><i class="ti ti-calendar-event"></i> Schedule Builder</button>
@@ -235,11 +194,7 @@
   <button class="tab-btn" onclick="switchTab('onboarding',this)"><i class="ti ti-git-merge"></i> Onboarding Pipeline</button>
   <button class="tab-btn" onclick="switchTab('calendar',this)"><i class="ti ti-calendar-month"></i> Calendar</button>
 </div>
-
-<!-- Main content -->
 <div class="hub-content" id="hubContent">
-
-  <!-- Sign-in screen shown before auth -->
   <div class="signin-screen" id="signinScreen">
     <div class="signin-card">
       <h1>Affiliate Command Hub</h1>
@@ -258,10 +213,8 @@
       <p style="font-size:11px; margin-top:12px; margin-bottom:0;">Read/write access to your Google Sheets only.</p>
     </div>
   </div>
-
-  <!-- Dashboard -->
   <div id="tab-dashboard" style="display:none">
-    <div class="metrics-grid" id="dashMetrics">
+    <div class="metrics-grid">
       <div class="metric-card"><div class="metric-label">Total affiliates</div><div class="metric-value" id="mTotal">—</div><div class="metric-sub">with sales on record</div></div>
       <div class="metric-card"><div class="metric-label">JV partners</div><div class="metric-value" id="mJV">40</div><div class="metric-sub">active outbound support</div></div>
       <div class="metric-card"><div class="metric-label">Scheduled mailings</div><div class="metric-value" id="mMailings">—</div><div class="metric-sub">this month</div></div>
@@ -288,8 +241,6 @@
       <a class="sheet-link" href="https://docs.google.com/spreadsheets/d/1HAXUIe3dFxmJe0gewq9BTlfgmhrbugNrKEllKnaaH4w" target="_blank"><i class="ti ti-external-link" style="font-size:11px"></i> Outbound requests</a>
     </div>
   </div>
-
-  <!-- Schedule Builder -->
   <div id="tab-schedule" style="display:none">
     <div class="section-hdr">
       <div class="section-title">Monthly schedule builder</div>
@@ -328,15 +279,13 @@
       </div>
     </div>
   </div>
-
-  <!-- JV Partners -->
   <div id="tab-partners" style="display:none">
     <div class="section-hdr">
       <div class="section-title">JV partner tracker</div>
       <div class="section-actions"><button class="btn" onclick="syncAllSheets()"><i class="ti ti-refresh"></i> Sync</button></div>
     </div>
     <div class="filter-bar">
-      <input type="text" placeholder="Search partners..." oninput="filterTable('partnerTbody', this.value, 0)" id="partnerSearch">
+      <input type="text" placeholder="Search partners..." oninput="filterTable('partnerTbody', this.value, 0)">
       <select onchange="filterTableByBadge('partnerTbody', this.value, [2,3])">
         <option value="">All statuses</option>
         <option value="Confirmed">Confirmed</option>
@@ -354,8 +303,6 @@
       </div>
     </div>
   </div>
-
-  <!-- Inbound Support -->
   <div id="tab-inbound" style="display:none">
     <div class="section-hdr">
       <div class="section-title">Inbound support tracker</div>
@@ -370,8 +317,6 @@
       </div>
     </div>
   </div>
-
-  <!-- Outbound Requests -->
   <div id="tab-outbound" style="display:none">
     <div class="section-hdr">
       <div class="section-title">Outbound support requests</div>
@@ -386,23 +331,19 @@
       </div>
     </div>
   </div>
-
-  <!-- Onboarding Pipeline -->
   <div id="tab-onboarding" style="display:none">
     <div class="section-hdr">
       <div class="section-title">Launch onboarding pipeline</div>
       <div class="section-actions"><button class="btn" onclick="syncAllSheets()"><i class="ti ti-refresh"></i> Sync</button></div>
     </div>
     <div class="alert alert-info"><i class="ti ti-info-circle"></i> Pulls from: Next launch onboarding sheet.</div>
-    <div class="pipeline-cols" id="pipelineCols">
+    <div class="pipeline-cols">
       <div class="pipe-col"><div class="pipe-col-hdr">Invited <span class="pipe-count">0</span></div><div id="pipe-invited"></div></div>
       <div class="pipe-col"><div class="pipe-col-hdr">Window confirmed <span class="pipe-count">0</span></div><div id="pipe-window"></div></div>
       <div class="pipe-col"><div class="pipe-col-hdr">Support scheduled <span class="pipe-count">0</span></div><div id="pipe-scheduled"></div></div>
       <div class="pipe-col"><div class="pipe-col-hdr">Fully onboarded <span class="pipe-count">0</span></div><div id="pipe-onboarded"></div></div>
     </div>
   </div>
-
-  <!-- Calendar -->
   <div id="tab-calendar" style="display:none">
     <div class="month-nav">
       <button class="btn" onclick="prevMonth()"><i class="ti ti-chevron-left"></i></button>
@@ -421,18 +362,11 @@
       </div>
     </div>
   </div>
-
-</div><!-- end hub-content -->
-
-<!-- Google Identity Services -->
+</div>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-
 <script>
-// ─── CONFIG ───────────────────────────────────────────────
 const CLIENT_ID = '1083602350626-ehdisn3dfp5d2mhsvahp8mbb2tlg0ek2.apps.googleusercontent.com';
 const SCOPES = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.readonly';
-
-// Your 5 sheet IDs
 const SHEETS = {
   outboundA:  { id: '1zSEcdcCM-_xv7Qcd-BcRRh0t_cGP7RooY-IWRQqmz8U', label: 'Outbound A' },
   outboundB:  { id: '1LH8gAOqsaS6H84MAqyf_wSh2RLgb_7uhvL7-4SPkvKw', label: 'Outbound B' },
@@ -440,32 +374,23 @@ const SHEETS = {
   onboarding: { id: '1at8pZ-JMuWqR5uE8KF_3RgvUTC7FH7Fd81pBN0MwtJw', label: 'Onboarding' },
   requests:   { id: '1HAXUIe3dFxmJe0gewq9BTlfgmhrbugNrKEllKnaaH4w', label: 'Requests' }
 };
-
-// ─── STATE ────────────────────────────────────────────────
 let tokenClient, accessToken = null;
 let sheetData = {};
-let scheduledMailings = []; // populated by schedule builder
+let scheduledMailings = [];
 let calYear = new Date().getFullYear(), calMonth = new Date().getMonth();
 let partnerRowCount = 0;
-
 const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const MONTHS_LONG = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-// ─── INIT ─────────────────────────────────────────────────
 window.onload = () => {
   document.getElementById('loadingOverlay').style.display = 'none';
-  // Try to restore token from sessionStorage
   const saved = sessionStorage.getItem('hub_token');
-  if (saved) {
-    accessToken = saved;
-    onSignedIn();
-  }
+  if (saved) { accessToken = saved; onSignedIn(); }
   addPartnerRow();
   addPartnerRow();
   renderCalendar();
 };
 
-// ─── AUTH ─────────────────────────────────────────────────
 function handleAuthClick() {
   if (!tokenClient) {
     tokenClient = google.accounts.oauth2.initTokenClient({
@@ -497,14 +422,10 @@ function showAuthError(err) {
   alert('Google auth error: ' + err + '\n\nMake sure you added yourself as a test user in Google Cloud Console → OAuth consent screen → Test users.');
 }
 
-// ─── SHEETS API ───────────────────────────────────────────
 async function fetchSheet(sheetId, range) {
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(range)}`;
   const res = await fetch(url, { headers: { Authorization: 'Bearer ' + accessToken } });
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.error?.message || 'Sheets API error');
-  }
+  if (!res.ok) { const err = await res.json(); throw new Error(err.error?.message || 'Sheets API error'); }
   const data = await res.json();
   return data.values || [];
 }
@@ -520,103 +441,41 @@ async function syncAllSheets() {
   if (!accessToken) { handleAuthClick(); return; }
   setSyncStatus('busy', 'Syncing...');
   try {
-    await Promise.all([
-      syncOutboundA(),
-      syncOutboundB(),
-      syncInbound(),
-      syncOnboarding(),
-      syncRequests()
-    ]);
+    await Promise.all([syncOutboundA(), syncOutboundB(), syncInbound(), syncOnboarding(), syncRequests()]);
     setSyncStatus('on', 'Synced · ' + new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}));
     refreshAllViews();
   } catch(e) {
     setSyncStatus('off', 'Sync error');
     console.error(e);
-    showError('Sync failed: ' + e.message + '\n\nTip: Make sure the sheet column mapping matches your actual sheet headers. Open the browser console for details.');
+    showError('Sync failed: ' + e.message);
   }
 }
 
 function setSyncStatus(state, label) {
-  const dot = document.getElementById('syncDot');
-  dot.className = 'sync-dot ' + (state === 'on' ? 'dot-on' : state === 'busy' ? 'dot-busy' : 'dot-off');
+  document.getElementById('syncDot').className = 'sync-dot ' + (state === 'on' ? 'dot-on' : state === 'busy' ? 'dot-busy' : 'dot-off');
   document.getElementById('syncLabel').textContent = label;
 }
 
-// ─── SYNC FUNCTIONS (adapt column indices to your sheets) ─
-async function syncOutboundA() {
-  // Gets the list of sheet tabs (top partners have their own tabs)
-  const tabs = await getSheetTabs(SHEETS.outboundA.id);
-  sheetData.outboundA_tabs = tabs;
-  // Also grab the first tab overview
+async function syncSheet(key, sheetObj) {
+  const tabs = await getSheetTabs(sheetObj.id);
+  sheetData[key + '_tabs'] = tabs;
   try {
-    const rows = await fetchSheet(SHEETS.outboundA.id, 'Sheet1!A1:Z200');
-    sheetData.outboundA = rows;
+    const rows = await fetchSheet(sheetObj.id, 'Sheet1!A1:Z500');
+    sheetData[key] = rows;
   } catch(e) {
-    // Try first tab name
     if (tabs.length) {
-      const rows = await fetchSheet(SHEETS.outboundA.id, `'${tabs[0]}'!A1:Z200`);
-      sheetData.outboundA = rows;
+      const rows = await fetchSheet(sheetObj.id, `'${tabs[0]}'!A1:Z500`);
+      sheetData[key] = rows;
     }
   }
 }
 
-async function syncOutboundB() {
-  const tabs = await getSheetTabs(SHEETS.outboundB.id);
-  sheetData.outboundB_tabs = tabs;
-  try {
-    const rows = await fetchSheet(SHEETS.outboundB.id, 'Sheet1!A1:Z500');
-    sheetData.outboundB = rows;
-  } catch(e) {
-    if (tabs.length) {
-      const rows = await fetchSheet(SHEETS.outboundB.id, `'${tabs[0]}'!A1:Z500`);
-      sheetData.outboundB = rows;
-    }
-  }
-}
+async function syncOutboundA() { await syncSheet('outboundA', SHEETS.outboundA); }
+async function syncOutboundB() { await syncSheet('outboundB', SHEETS.outboundB); }
+async function syncInbound()   { await syncSheet('inbound', SHEETS.inbound); }
+async function syncOnboarding(){ await syncSheet('onboarding', SHEETS.onboarding); }
+async function syncRequests()  { await syncSheet('requests', SHEETS.requests); }
 
-async function syncInbound() {
-  const tabs = await getSheetTabs(SHEETS.inbound.id);
-  sheetData.inbound_tabs = tabs;
-  try {
-    const rows = await fetchSheet(SHEETS.inbound.id, 'Sheet1!A1:Z500');
-    sheetData.inbound = rows;
-  } catch(e) {
-    if (tabs.length) {
-      const rows = await fetchSheet(SHEETS.inbound.id, `'${tabs[0]}'!A1:Z500`);
-      sheetData.inbound = rows;
-    }
-  }
-}
-
-async function syncOnboarding() {
-  const tabs = await getSheetTabs(SHEETS.onboarding.id);
-  sheetData.onboarding_tabs = tabs;
-  try {
-    const rows = await fetchSheet(SHEETS.onboarding.id, 'Sheet1!A1:Z200');
-    sheetData.onboarding = rows;
-  } catch(e) {
-    if (tabs.length) {
-      const rows = await fetchSheet(SHEETS.onboarding.id, `'${tabs[0]}'!A1:Z200`);
-      sheetData.onboarding = rows;
-    }
-  }
-}
-
-async function syncRequests() {
-  const tabs = await getSheetTabs(SHEETS.requests.id);
-  sheetData.requests_tabs = tabs;
-  try {
-    const rows = await fetchSheet(SHEETS.requests.id, 'Sheet1!A1:Z500');
-    sheetData.requests = rows;
-  } catch(e) {
-    if (tabs.length) {
-      const rows = await fetchSheet(SHEETS.requests.id, `'${tabs[0]}'!A1:Z500`);
-      sheetData.requests = rows;
-    }
-  }
-}
-
-// ─── REFRESH VIEWS ────────────────────────────────────────
 function refreshAllViews() {
   refreshDashboard();
   refreshPartners();
@@ -627,56 +486,31 @@ function refreshAllViews() {
 }
 
 function refreshDashboard() {
-  // Count affiliates from outboundA
   const aRows = sheetData.outboundA || [];
   if (aRows.length > 1) document.getElementById('mTotal').textContent = aRows.length - 1;
-
-  // Pending inbound
   const inRows = sheetData.inbound || [];
   const pending = inRows.filter((r,i) => i > 0 && r.join(' ').toLowerCase().includes('pending')).length;
   document.getElementById('mPendingIn').textContent = pending || '—';
   document.getElementById('mMailings').textContent = scheduledMailings.length || '—';
-
-  // Outbound sent count
   const reqRows = sheetData.requests || [];
   const sent = reqRows.filter((r,i) => i > 0 && r.join(' ').toLowerCase().includes('sent')).length;
   document.getElementById('mOutbound').textContent = sent || '—';
-
-  // Flags
   const flags = [];
   if (pending > 0) flags.push({ type: 'warn', msg: `${pending} partner(s) have pending inbound support not yet confirmed.` });
-  const tightPartners = scheduledMailings.filter(m => {
+  scheduledMailings.filter(m => {
     if (!m.start || !m.end) return false;
-    const diff = (new Date(m.end) - new Date(m.start)) / 86400000;
-    return diff <= 5;
-  });
-  tightPartners.forEach(m => flags.push({ type: 'warn', msg: `${m.name}: tight promo window — prioritize scheduling.` }));
-  if (flags.length) {
-    document.getElementById('dashFlags').innerHTML = flags.map(f =>
-      `<div class="alert alert-${f.type === 'warn' ? 'warn' : 'info'}"><i class="ti ti-alert-triangle"></i>${f.msg}</div>`
-    ).join('');
-  }
-
-  // Badge
-  if (pending > 0) {
-    document.getElementById('pendingBadge').textContent = pending;
-    document.getElementById('pendingBadge').style.display = '';
-  }
-
-  // Upcoming mailings
+    return (new Date(m.end) - new Date(m.start)) / 86400000 <= 5;
+  }).forEach(m => flags.push({ type: 'warn', msg: `${m.name}: tight promo window — prioritize scheduling.` }));
+  document.getElementById('dashFlags').innerHTML = flags.length
+    ? flags.map(f => `<div class="alert alert-warn"><i class="ti ti-alert-triangle"></i>${f.msg}</div>`).join('')
+    : '<div class="empty-state"><i class="ti ti-check"></i><p>No flags right now.</p></div>';
+  if (pending > 0) { document.getElementById('pendingBadge').textContent = pending; document.getElementById('pendingBadge').style.display = ''; }
   if (scheduledMailings.length) {
     const sorted = [...scheduledMailings].sort((a,b) => new Date(a.date) - new Date(b.date));
-    const upcoming = sorted.slice(0, 6);
-    document.getElementById('dashUpcoming').innerHTML = upcoming.map(m => {
+    document.getElementById('dashUpcoming').innerHTML = sorted.slice(0,6).map(m => {
       const d = new Date(m.date + 'T00:00:00');
-      const label = `${d.getMonth()+1}/${d.getDate()}`;
       const cls = m.cookie === '1st' ? 'b-1st' : m.cookie === 'last' ? 'b-last' : m.cookie === 'rec' ? 'b-rec' : 'b-evgrn';
-      const cookieLabel = m.cookie === 'rec' ? 'Rec' : m.cookie;
-      return `<div class="mail-item">
-        <div class="mail-date">${label}</div>
-        <div class="mail-info"><div class="pname">${m.name}</div><div class="pdetail">#${m.num} · ${m.windowStr || ''}</div></div>
-        <span class="badge ${cls}">${cookieLabel}</span>
-      </div>`;
+      return `<div class="mail-item"><div class="mail-date">${d.getMonth()+1}/${d.getDate()}</div><div class="mail-info"><div class="pname">${m.name}</div><div class="pdetail">#${m.num} · ${m.windowStr||''}</div></div><span class="badge ${cls}">${m.cookie==='rec'?'Rec':m.cookie}</span></div>`;
     }).join('');
   }
 }
@@ -684,86 +518,56 @@ function refreshDashboard() {
 function refreshPartners() {
   const rows = sheetData.outboundA || [];
   if (rows.length < 2) return;
-  const headers = rows[0];
-  const tbody = document.getElementById('partnerTbody');
-  tbody.innerHTML = rows.slice(1).map(r => {
-    const name = r[0] || '';
-    if (!name) return '';
-    return `<tr>
-      <td class="name-cell">${name}</td>
-      <td><span class="badge b-evgrn">${r[1] || 'evgrn'}</span></td>
-      <td><span class="badge b-none">—</span></td>
-      <td><span class="badge b-none">—</span></td>
-      <td style="color:var(--text-secondary);font-size:12px">${r[2] || '—'}</td>
-      <td style="color:var(--text-secondary);font-size:12px">${r[3] || '—'}</td>
-      <td style="color:var(--text-secondary);font-size:12px">${r[4] || ''}</td>
-    </tr>`;
+  document.getElementById('partnerTbody').innerHTML = rows.slice(1).map(r => {
+    if (!r[0]) return '';
+    return `<tr><td class="name-cell">${r[0]}</td><td><span class="badge b-evgrn">${r[1]||'evgrn'}</span></td><td><span class="badge b-none">—</span></td><td><span class="badge b-none">—</span></td><td style="color:var(--text-secondary);font-size:12px">${r[2]||'—'}</td><td style="color:var(--text-secondary);font-size:12px">${r[3]||'—'}</td><td style="color:var(--text-secondary);font-size:12px">${r[4]||''}</td></tr>`;
   }).join('');
 }
 
 function refreshInbound() {
   const rows = sheetData.inbound || [];
   if (rows.length < 2) return;
-  const tbody = document.getElementById('inboundTbody');
-  tbody.innerHTML = rows.slice(1).map(r => {
+  document.getElementById('inboundTbody').innerHTML = rows.slice(1).map(r => {
     if (!r[0]) return '';
-    const statusVal = (r[3] || '').toLowerCase();
-    const scls = statusVal.includes('confirm') ? 'b-confirmed' : statusVal.includes('pend') ? 'b-pending' : 'b-none';
-    return `<tr>
-      <td class="name-cell">${r[0]}</td>
-      <td>${r[1] || '—'}</td>
-      <td>${r[2] || '—'}</td>
-      <td><span class="badge ${scls}">${r[3] || '—'}</span></td>
-      <td style="font-size:12px;color:var(--text-secondary)">${r[4] || ''}</td>
-    </tr>`;
+    const s = (r[3]||'').toLowerCase();
+    const sc = s.includes('confirm') ? 'b-confirmed' : s.includes('pend') ? 'b-pending' : 'b-none';
+    return `<tr><td class="name-cell">${r[0]}</td><td>${r[1]||'—'}</td><td>${r[2]||'—'}</td><td><span class="badge ${sc}">${r[3]||'—'}</span></td><td style="font-size:12px;color:var(--text-secondary)">${r[4]||''}</td></tr>`;
   }).join('');
 }
 
 function refreshOutbound() {
   const rows = sheetData.requests || [];
   if (rows.length < 2) return;
-  const tbody = document.getElementById('outboundTbody');
-  tbody.innerHTML = rows.slice(1).map(r => {
+  document.getElementById('outboundTbody').innerHTML = rows.slice(1).map(r => {
     if (!r[0]) return '';
-    const statusVal = (r[3] || '').toLowerCase();
-    const scls = statusVal.includes('confirm') ? 'b-confirmed' : statusVal.includes('pend') ? 'b-pending' : statusVal.includes('sent') ? 'b-sent' : 'b-none';
-    return `<tr>
-      <td class="name-cell">${r[0]}</td>
-      <td>${r[1] || '—'}</td>
-      <td>${r[2] || '—'}</td>
-      <td><span class="badge ${scls}">${r[3] || '—'}</span></td>
-      <td>${r[4] || '—'}</td>
-      <td>${r[5] || '—'}</td>
-      <td style="font-size:12px;color:var(--text-secondary)">${r[6] || ''}</td>
-    </tr>`;
+    const s = (r[3]||'').toLowerCase();
+    const sc = s.includes('confirm') ? 'b-confirmed' : s.includes('pend') ? 'b-pending' : s.includes('sent') ? 'b-sent' : 'b-none';
+    return `<tr><td class="name-cell">${r[0]}</td><td>${r[1]||'—'}</td><td>${r[2]||'—'}</td><td><span class="badge ${sc}">${r[3]||'—'}</span></td><td>${r[4]||'—'}</td><td>${r[5]||'—'}</td><td style="font-size:12px;color:var(--text-secondary)">${r[6]||''}</td></tr>`;
   }).join('');
 }
 
 function refreshOnboarding() {
   const rows = sheetData.onboarding || [];
   if (rows.length < 2) return;
-  const buckets = { invited: [], window: [], scheduled: [], onboarded: [] };
+  const b = { invited:[], window:[], scheduled:[], onboarded:[] };
   rows.slice(1).forEach(r => {
     if (!r[0]) return;
-    const status = (r[1] || '').toLowerCase();
-    const card = `<div class="pipe-card"><div class="pipe-card-name">${r[0]}</div><div class="pipe-card-detail">${r[2] || ''}</div></div>`;
-    if (status.includes('onboard')) buckets.onboarded.push(card);
-    else if (status.includes('schedul')) buckets.scheduled.push(card);
-    else if (status.includes('window') || status.includes('confirm')) buckets.window.push(card);
-    else buckets.invited.push(card);
+    const s = (r[1]||'').toLowerCase();
+    const card = `<div class="pipe-card"><div class="pipe-card-name">${r[0]}</div><div class="pipe-card-detail">${r[2]||''}</div></div>`;
+    if (s.includes('onboard')) b.onboarded.push(card);
+    else if (s.includes('schedul')) b.scheduled.push(card);
+    else if (s.includes('window')||s.includes('confirm')) b.window.push(card);
+    else b.invited.push(card);
   });
-  document.getElementById('pipe-invited').innerHTML = buckets.invited.join('') || '<div style="font-size:12px;color:var(--text-secondary);padding:8px">None yet</div>';
-  document.getElementById('pipe-window').innerHTML = buckets.window.join('') || '<div style="font-size:12px;color:var(--text-secondary);padding:8px">None yet</div>';
-  document.getElementById('pipe-scheduled').innerHTML = buckets.scheduled.join('') || '<div style="font-size:12px;color:var(--text-secondary);padding:8px">None yet</div>';
-  document.getElementById('pipe-onboarded').innerHTML = buckets.onboarded.join('') || '<div style="font-size:12px;color:var(--text-secondary);padding:8px">None yet</div>';
-  // Update counts
-  const cols = document.querySelectorAll('.pipe-col');
-  const keys = ['invited','window','scheduled','onboarded'];
-  cols.forEach((col, i) => { col.querySelector('.pipe-count').textContent = buckets[keys[i]].length; });
-}
-
-// ─── SCHEDULE BUILDER ─────────────────────────────────────
-function addPartnerRow() {
+  const empty = '<div style="font-size:12px;color:var(--text-secondary);padding:8px">None yet</div>';
+  document.getElementById('pipe-invited').innerHTML = b.invited.join('')||empty;
+  document.getElementById('pipe-window').innerHTML = b.window.join('')||empty;
+  document.getElementById('pipe-scheduled').innerHTML = b.scheduled.join('')||empty;
+  document.getElementById('pipe-onboarded').innerHTML = b.onboarded.join('')||empty;
+  document.querySelectorAll('.pipe-count').forEach((el,i) => {
+    el.textContent = [b.invited,b.window,b.scheduled,b.onboarded][i].length;
+  });
+}function addPartnerRow() {
   partnerRowCount++;
   const id = 'pr-' + partnerRowCount;
   const div = document.createElement('div');
@@ -775,7 +579,7 @@ function addPartnerRow() {
     </div>
     <div class="form-group" style="min-width:120px"><label>Window start</label><input type="date"></div>
     <div class="form-group" style="min-width:120px"><label>Window end</label><input type="date"></div>
-    <div class="form-group narrow"><label># Mailings</label><input type="number" min="1" max="5" value="1"></div>
+    <div class="form-group" style="max-width:70px"><label># Mailings</label><input type="number" min="1" max="5" value="1"></div>
     <div class="form-group" style="max-width:36px;justify-content:flex-end">
       <label style="opacity:0">x</label>
       <button class="btn" style="padding:6px 8px;color:var(--red-text)" onclick="document.getElementById('${id}').remove()"><i class="ti ti-x"></i></button>
@@ -792,50 +596,34 @@ function clearSchedule() {
 function generateSchedule() {
   const launchVal = document.getElementById('launchDate').value;
   const launchDate = launchVal ? new Date(launchVal + 'T00:00:00') : null;
-  const rows = document.querySelectorAll('#partnerRows .partner-row');
   const partners = [];
-  rows.forEach(row => {
+  document.querySelectorAll('#partnerRows .partner-row').forEach(row => {
     const inputs = row.querySelectorAll('input, select');
     const name = inputs[0].value.trim();
     const cookie = inputs[1].value;
-    const startVal = inputs[2].value;
-    const endVal = inputs[3].value;
+    const start = inputs[2].value ? new Date(inputs[2].value + 'T00:00:00') : null;
+    const end = inputs[3].value ? new Date(inputs[3].value + 'T00:00:00') : null;
     const count = parseInt(inputs[4].value) || 1;
-    if (!name) return;
-    const start = startVal ? new Date(startVal + 'T00:00:00') : null;
-    const end = endVal ? new Date(endVal + 'T00:00:00') : null;
-    partners.push({ name, cookie, start, end, count });
+    if (name) partners.push({ name, cookie, start, end, count });
   });
   if (!partners.length) return;
-
   const usedDays = new Set();
   const schedule = {};
   const warnings = [];
   scheduledMailings = [];
-
   partners.forEach(p => {
-    if (!p.start || !p.end) {
-      warnings.push(`${p.name}: no promo window entered — skipped`);
-      return;
-    }
-    // Build valid days in window
+    if (!p.start || !p.end) { warnings.push(`${p.name}: no promo window entered — skipped`); return; }
     let candidates = [];
-    for (let d = new Date(p.start); d <= p.end; d = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1)) {
+    for (let d = new Date(p.start); d <= p.end; d = new Date(d.getFullYear(), d.getMonth(), d.getDate()+1)) {
       if (launchDate && d < launchDate) continue;
-      if (d.getDay() === 2) continue; // no Tuesdays
+      if (d.getDay() === 2) continue;
       candidates.push(new Date(d));
     }
     if (!candidates.length) { warnings.push(`${p.name}: no valid days in window`); return; }
     if (p.cookie === 'last') candidates = candidates.reverse();
-
     for (let i = 0; i < p.count; i++) {
       let chosen = null;
-      // Space out multiple mailings
-      const startIndex = p.count > 1 ? Math.floor((i / p.count) * candidates.length) : 0;
-      const slice = p.cookie === 'last'
-        ? candidates.slice(0, Math.ceil(candidates.length * (1 - i / (p.count || 1))))
-        : candidates.slice(startIndex);
-
+      const slice = p.count > 1 ? candidates.slice(Math.floor((i/p.count)*candidates.length)) : candidates;
       for (const day of (slice.length ? slice : candidates)) {
         const key = fmtDate(day);
         const prev = fmtDate(new Date(day.getFullYear(), day.getMonth(), day.getDate()-1));
@@ -844,39 +632,25 @@ function generateSchedule() {
         if (!usedDays.has(key) && !usedDays.has(prev) && !usedDays.has(next)) { chosen = day; break; }
         if (!chosen && !usedDays.has(key)) chosen = day;
       }
-      if (!chosen) {
-        chosen = candidates[Math.min(i, candidates.length - 1)];
-        warnings.push(`${p.name} mailing ${i+1}: unavoidable conflict, placed best available`);
-      }
+      if (!chosen) { chosen = candidates[Math.min(i, candidates.length-1)]; warnings.push(`${p.name} mailing ${i+1}: unavoidable conflict, placed best available`); }
       const key = fmtDate(chosen);
       if (!schedule[key]) schedule[key] = [];
-      const entry = {
-        name: p.name, cookie: p.cookie, num: i+1,
-        windowStr: `${p.start.getMonth()+1}/${p.start.getDate()}–${p.end.getMonth()+1}/${p.end.getDate()}`,
-        date: key, start: fmtDate(p.start), end: fmtDate(p.end)
-      };
+      const entry = { name:p.name, cookie:p.cookie, num:i+1, windowStr:`${p.start.getMonth()+1}/${p.start.getDate()}–${p.end.getMonth()+1}/${p.end.getDate()}`, date:key, start:fmtDate(p.start), end:fmtDate(p.end) };
       schedule[key].push(entry);
       scheduledMailings.push(entry);
       if (p.cookie !== 'rec') usedDays.add(key);
     }
   });
-
-  // Render output
   const sortedKeys = Object.keys(schedule).sort();
-  let html = `<div class="panel"><div class="panel-title"><div class="panel-title-left"><i class="ti ti-list-check"></i> Generated schedule</div><div style="display:flex;gap:6px"><button class="btn" style="font-size:12px;padding:4px 10px" onclick="copyScheduleText()"><i class="ti ti-copy"></i> Copy</button></div></div>`;
+  let html = `<div class="panel"><div class="panel-title"><div class="panel-title-left"><i class="ti ti-list-check"></i> Generated schedule</div><button class="btn" style="font-size:12px;padding:4px 10px" onclick="copyScheduleText()"><i class="ti ti-copy"></i> Copy</button></div>`;
   warnings.forEach(w => { html += `<div class="warn-item"><i class="ti ti-alert-triangle"></i>${w}</div>`; });
   html += '<div>';
   sortedKeys.forEach(key => {
     const d = new Date(key + 'T00:00:00');
-    const dow = DAYS[d.getDay()];
-    const isTue = d.getDay() === 2;
-    html += `<div class="schedule-item">
-      <div class="schedule-date">${d.getMonth()+1}/${d.getDate()}<br><span class="dow">${dow}${isTue ? ' ⚠' : ''}</span></div>
-      <div class="schedule-entries">`;
+    html += `<div class="schedule-item"><div class="schedule-date">${d.getMonth()+1}/${d.getDate()}<br><span class="dow">${DAYS[d.getDay()]}${d.getDay()===2?' ⚠':''}</span></div><div class="schedule-entries">`;
     schedule[key].forEach(e => {
-      const cls = e.cookie === '1st' ? 'b-1st' : e.cookie === 'last' ? 'b-last' : e.cookie === 'rec' ? 'b-rec' : 'b-evgrn';
-      const lbl = e.cookie === 'rec' ? 'Rec' : e.cookie;
-      html += `<div class="schedule-entry"><span class="badge ${cls}">${lbl}</span><span>${e.name} #${e.num} (${e.windowStr})</span></div>`;
+      const cls = e.cookie==='1st'?'b-1st':e.cookie==='last'?'b-last':e.cookie==='rec'?'b-rec':'b-evgrn';
+      html += `<div class="schedule-entry"><span class="badge ${cls}">${e.cookie==='rec'?'Rec':e.cookie}</span><span>${e.name} #${e.num} (${e.windowStr})</span></div>`;
     });
     html += '</div></div>';
   });
@@ -893,45 +667,37 @@ function copyScheduleText() {
     const date = item.querySelector('.schedule-date').innerText.replace(/\n/g,' ').trim();
     item.querySelectorAll('.schedule-entry').forEach(e => { text += date + ' - ' + e.textContent.trim() + '\n'; });
   });
-  navigator.clipboard.writeText(text).catch(() => {});
+  navigator.clipboard.writeText(text).catch(()=>{});
 }
 
-// ─── CALENDAR ─────────────────────────────────────────────
 function renderCalendar() {
   document.getElementById('calMonthLabel').textContent = MONTHS_LONG[calMonth] + ' ' + calYear;
-  const grid = document.getElementById('calGrid');
-  let html = DAYS.map(d => `<div class="cal-hdr">${d}</div>`).join('');
-  const firstDay = new Date(calYear, calMonth, 1).getDay();
-  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
   const launchVal = document.getElementById('launchDate')?.value;
   const launchDate = launchVal ? new Date(launchVal + 'T00:00:00') : null;
-
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+  let html = DAYS.map(d => `<div class="cal-hdr">${d}</div>`).join('');
   for (let i = 0; i < firstDay; i++) html += '<div></div>';
   for (let d = 1; d <= daysInMonth; d++) {
     const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const dateObj = new Date(calYear, calMonth, d);
-    const dow = dateObj.getDay();
-    const isTue = dow === 2;
+    const isTue = dateObj.getDay() === 2;
     const beforeLaunch = launchDate && dateObj < launchDate;
     const dayMailings = scheduledMailings.filter(m => m.date === dateStr);
-    let cls = 'cal-day';
-    if (isTue) cls += ' tuesday';
-    if (dayMailings.length) cls += ' has-mail';
-    if (beforeLaunch) cls += ' before-launch';
+    let cls = 'cal-day' + (isTue?' tuesday':'') + (dayMailings.length?' has-mail':'') + (beforeLaunch?' before-launch':'');
     html += `<div class="${cls}"><div class="cal-num">${d}</div>`;
     dayMailings.forEach(m => {
-      const ec = m.cookie === '1st' ? 'ce-1st' : m.cookie === 'last' ? 'ce-last' : m.cookie === 'rec' ? 'ce-rec' : '';
+      const ec = m.cookie==='1st'?'ce-1st':m.cookie==='last'?'ce-last':m.cookie==='rec'?'ce-rec':'';
       html += `<div class="cal-entry ${ec}">${m.name.split(' ')[0]} #${m.num}</div>`;
     });
     html += '</div>';
   }
-  grid.innerHTML = html;
+  document.getElementById('calGrid').innerHTML = html;
 }
 
-function prevMonth() { calMonth--; if (calMonth < 0) { calMonth = 11; calYear--; } renderCalendar(); }
-function nextMonth() { calMonth++; if (calMonth > 11) { calMonth = 0; calYear++; } renderCalendar(); }
+function prevMonth() { calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); }
+function nextMonth() { calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCalendar(); }
 
-// ─── UI UTILS ─────────────────────────────────────────────
 function switchTab(name, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
@@ -947,20 +713,20 @@ function showTab(name) {
 
 function switchTabByName(name) {
   document.querySelectorAll('.tab-btn').forEach(btn => {
-    if (btn.getAttribute('onclick')?.includes("'" + name + "'")) btn.click();
+    if (btn.getAttribute('onclick')?.includes("'"+name+"'")) btn.click();
   });
 }
 
 function filterTable(tbodyId, val, col) {
-  document.querySelectorAll('#' + tbodyId + ' tr').forEach(r => {
-    r.style.display = (r.cells[col]?.textContent || '').toLowerCase().includes(val.toLowerCase()) ? '' : 'none';
+  document.querySelectorAll('#'+tbodyId+' tr').forEach(r => {
+    r.style.display = (r.cells[col]?.textContent||'').toLowerCase().includes(val.toLowerCase()) ? '' : 'none';
   });
 }
 
 function filterTableByBadge(tbodyId, val, cols) {
-  if (!val) { document.querySelectorAll('#' + tbodyId + ' tr').forEach(r => r.style.display = ''); return; }
-  document.querySelectorAll('#' + tbodyId + ' tr').forEach(r => {
-    const text = cols.map(c => r.cells[c]?.textContent || '').join(' ').toLowerCase();
+  if (!val) { document.querySelectorAll('#'+tbodyId+' tr').forEach(r => r.style.display=''); return; }
+  document.querySelectorAll('#'+tbodyId+' tr').forEach(r => {
+    const text = cols.map(c => r.cells[c]?.textContent||'').join(' ').toLowerCase();
     r.style.display = text.includes(val.toLowerCase()) ? '' : 'none';
   });
 }
