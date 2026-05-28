@@ -48,33 +48,14 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
 .form-group{display:flex;flex-direction:column;gap:4px;}
 .form-group label{font-size:11px;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-secondary);font-weight:500;}
 .form-group input,.form-group select{padding:7px 10px;border:0.5px solid var(--border-md);border-radius:var(--radius-md);font-size:13px;background:var(--bg-primary);color:var(--text-primary);}
-.form-group input:focus,.form-group select:focus{outline:none;border-color:var(--text-primary);}
-.partner-row{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;padding:10px;background:var(--bg-secondary);border-radius:var(--radius-md);margin-bottom:6px;}
-.partner-row .form-group{flex:1;min-width:100px;}
-.schedule-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--border);}
-.schedule-item:last-child{border-bottom:none;}
-.schedule-date{min-width:70px;font-size:12px;font-weight:500;}
-.schedule-date .dow{font-size:10px;color:var(--text-secondary);font-weight:400;}
-.schedule-entries{flex:1;display:flex;flex-direction:column;gap:4px;}
-.schedule-entry{font-size:12px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
-.warn-item{background:var(--amber-bg);color:var(--amber-text);border-radius:var(--radius-md);padding:6px 10px;font-size:12px;display:flex;gap:6px;margin-bottom:6px;}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
 .cal-hdr{font-size:11px;text-align:center;padding:4px;color:var(--text-secondary);font-weight:500;}
 .cal-day{min-height:72px;background:var(--bg-primary);border:0.5px solid var(--border);border-radius:var(--radius-md);padding:4px 5px;}
-.cal-day.tuesday{background:var(--bg-secondary);}.cal-day.has-mail{border-color:#378ADD;}.cal-day.before-launch{opacity:0.45;}
+.cal-day.has-event{border-color:#378ADD;}
 .cal-num{font-size:11px;color:var(--text-secondary);margin-bottom:2px;}
-.cal-entry{font-size:9px;border-radius:3px;padding:1px 3px;margin-bottom:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.ce-1st{background:var(--blue-bg);color:var(--blue-text);}.ce-last{background:var(--green-bg);color:var(--green-text);}.ce-rec{background:var(--amber-bg);color:var(--amber-text);}
+.cal-entry{font-size:9px;border-radius:3px;padding:1px 3px;margin-bottom:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:var(--blue-bg);color:var(--blue-text);}
 .month-nav{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
 .month-nav .month-label{font-size:15px;font-weight:500;flex:1;}
-.cal-legend{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap;}
-.cal-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary);}
-.cal-legend-dot{width:10px;height:10px;border-radius:2px;}
-.pipe-col{background:var(--bg-secondary);border-radius:var(--radius-lg);padding:0.75rem;}
-.pipe-col-hdr{font-size:11px;text-transform:uppercase;letter-spacing:0.05em;font-weight:500;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;color:var(--text-secondary);}
-.pipe-count{font-size:10px;background:var(--bg-primary);border:0.5px solid var(--border);border-radius:10px;padding:1px 7px;color:var(--text-primary);}
-.pipe-card{background:var(--bg-primary);border:0.5px solid var(--border);border-radius:var(--radius-md);padding:8px 10px;margin-bottom:6px;font-size:12px;}
-.pipe-card-name{font-weight:500;margin-bottom:2px;}.pipe-card-detail{color:var(--text-secondary);font-size:11px;}
 .sheet-links{display:flex;flex-wrap:wrap;gap:6px;margin-top:1rem;}
 .sheet-link{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary);border:0.5px solid var(--border);border-radius:10px;padding:3px 9px;text-decoration:none;}
 .sheet-link:hover{background:var(--bg-secondary);color:var(--text-primary);}
@@ -83,7 +64,7 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
 .mail-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--border);}
 .mail-item:last-child{border-bottom:none;}
 .mail-date{font-size:12px;font-weight:500;min-width:36px;text-align:center;background:var(--bg-secondary);border-radius:var(--radius-md);padding:4px 6px;}
-.mail-info{flex:1;}.mail-info .pname{font-weight:500;font-size:13px;}.mail-info .pdetail{font-size:11px;color:var(--text-secondary);}
+.mail-info{flex:1;}.mail-info .pname{font-weight:500;font-size:13px;}
 .signin-screen{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 52px);padding:2rem;}
 .signin-card{background:var(--bg-primary);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:2.5rem;max-width:440px;width:100%;text-align:center;}
 .signin-card h1{font-size:20px;font-weight:600;margin-bottom:0.5rem;}
@@ -106,8 +87,16 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
 .partner-profile-name{font-weight:500;font-size:14px;display:flex;align-items:center;gap:8px;}
 .partner-profile-body{display:none;margin-top:1rem;border-top:0.5px solid var(--border);padding-top:1rem;}
 .partner-profile-body.open{display:block;}
-.launch-row{display:flex;gap:6px;align-items:center;font-size:12px;padding:5px 0;border-bottom:0.5px solid var(--border);}
-.launch-row:last-child{border-bottom:none;}.launch-label{min-width:90px;color:var(--text-secondary);}
+.stats-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:4px;}
+.stats-table th{font-size:10px;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-secondary);padding:5px 8px;text-align:left;border-bottom:0.5px solid var(--border);background:var(--bg-secondary);}
+.stats-table td{padding:5px 8px;border-bottom:0.5px solid var(--border);}
+.stats-table tr:last-child td{border-bottom:none;}
+.stats-table .totals-row td{font-weight:600;background:var(--bg-secondary);border-top:0.5px solid var(--border-md);}
+.stats-table .year-row td{font-weight:600;background:var(--bg-tertiary);font-size:11px;color:var(--text-secondary);padding:3px 8px;}
+.event-list-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--border);font-size:13px;}
+.event-list-item:last-child{border-bottom:none;}
+.event-dot{width:8px;height:8px;border-radius:50%;background:var(--blue-text);flex-shrink:0;}
+.event-date-label{font-size:12px;font-weight:500;min-width:60px;color:var(--text-secondary);}
 </style>
 </head>
 <body>
@@ -124,7 +113,6 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
 
 <div class="hub-tabs" id="hubTabs" style="display:none">
   <button class="tab-btn active" onclick="switchTab('dashboard',this)"><i class="ti ti-layout-dashboard"></i> Dashboard</button>
-  <button class="tab-btn" onclick="switchTab('schedule',this)"><i class="ti ti-calendar-event"></i> Schedule Builder</button>
   <button class="tab-btn" onclick="switchTab('partners',this)"><i class="ti ti-users"></i> JV Partners</button>
   <button class="tab-btn" onclick="switchTab('inbound',this)"><i class="ti ti-inbox"></i> Inbound Support</button>
   <button class="tab-btn" onclick="switchTab('outbound',this)"><i class="ti ti-send"></i> Outbound Requests</button>
@@ -134,19 +122,21 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
 
 <div class="hub-content" id="hubContent">
 
+<!-- SIGN IN -->
 <div class="signin-screen" id="signinScreen">
   <div class="signin-card">
     <h1>Affiliate Command Hub</h1>
-    <p>Connect your Google Sheets to sync all five affiliate tracking sources into one place.</p>
+    <p>Connect your Google Sheets and Calendar to sync all affiliate tracking sources and your mailing calendar.</p>
     <div class="sheets-list">
       <div class="sheets-item"><i class="ti ti-table"></i><div><div class="sheets-item-name">Sheet 1 — Inbound support</div><div class="sheets-item-role">Partner sales results for YOM</div></div></div>
       <div class="sheets-item"><i class="ti ti-table"></i><div><div class="sheets-item-name">Sheet 2 — Next launch onboarding</div><div class="sheets-item-role">Confirmed + declined partners</div></div></div>
       <div class="sheets-item"><i class="ti ti-table"></i><div><div class="sheets-item-name">Sheet 3 — Outbound requests</div><div class="sheets-item-role">Affiliate dates, confirmed, cookie</div></div></div>
       <div class="sheets-item"><i class="ti ti-table"></i><div><div class="sheets-item-name">Sheet 4 — Outbound A (top partners)</div><div class="sheets-item-role">One tab per partner, launch stats</div></div></div>
       <div class="sheets-item"><i class="ti ti-table"></i><div><div class="sheets-item-name">Sheet 5 — Outbound B (internal)</div><div class="sheets-item-role">Clicks, opens, sends per mailing</div></div></div>
+      <div class="sheets-item"><i class="ti ti-calendar"></i><div><div class="sheets-item-name">Google Calendar</div><div class="sheets-item-role">Affiliate Launch Mailings Calendar</div></div></div>
     </div>
     <button class="google-btn" onclick="handleAuthClick()"><svg viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>Sign in with Google</button>
-    <p style="font-size:11px;margin-top:12px;margin-bottom:0;">Read/write access to your Google Sheets only.</p>
+    <p style="font-size:11px;margin-top:12px;margin-bottom:0;">Read-only access to your Sheets and Calendar.</p>
   </div>
 </div>
 
@@ -155,14 +145,14 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
   <div class="metrics-grid">
     <div class="metric-card"><div class="metric-label">Top partners</div><div class="metric-value" id="mTotal">—</div><div class="metric-sub">tabs in Outbound A</div></div>
     <div class="metric-card"><div class="metric-label">Confirmed this launch</div><div class="metric-value" id="mConfirmed">—</div><div class="metric-sub">onboarding sheet</div></div>
-    <div class="metric-card"><div class="metric-label">Scheduled mailings</div><div class="metric-value" id="mMailings">—</div><div class="metric-sub">this month</div></div>
+    <div class="metric-card"><div class="metric-label">Upcoming mailings</div><div class="metric-value" id="mMailings">—</div><div class="metric-sub">from calendar</div></div>
     <div class="metric-card"><div class="metric-label">Pending outbound</div><div class="metric-value" id="mPendingOut">—</div><div class="metric-sub">not yet confirmed</div></div>
     <div class="metric-card"><div class="metric-label">Mailings tracked</div><div class="metric-value" id="mTracked">—</div><div class="metric-sub">in internal tracker</div></div>
   </div>
   <div class="two-col">
     <div class="panel">
-      <div class="panel-title"><div class="panel-title-left"><i class="ti ti-calendar-event"></i> Upcoming mailings</div><span style="font-size:12px;color:var(--text-secondary);cursor:pointer" onclick="switchTabByName('schedule')">Schedule builder →</span></div>
-      <div id="dashUpcoming"><div class="empty-state"><i class="ti ti-calendar"></i><p>Build a schedule to see upcoming mailings here.</p></div></div>
+      <div class="panel-title"><div class="panel-title-left"><i class="ti ti-calendar-event"></i> Upcoming calendar events</div><span style="font-size:12px;color:var(--text-secondary);cursor:pointer" onclick="switchTabByName('calendar')">Full calendar →</span></div>
+      <div id="dashUpcoming"><div class="empty-state"><i class="ti ti-calendar"></i><p>Sync to load upcoming mailings from your calendar.</p></div></div>
     </div>
     <div class="panel">
       <div class="panel-title"><div class="panel-title-left"><i class="ti ti-alert-triangle"></i> Flags & attention needed</div></div>
@@ -180,41 +170,10 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
   </div>
 </div>
 
-<!-- SCHEDULE BUILDER -->
-<div id="tab-schedule" style="display:none">
-  <div class="section-hdr">
-    <div class="section-title">Monthly schedule builder</div>
-    <div class="section-actions">
-      <button class="btn" onclick="loadFromSheet3()"><i class="ti ti-download"></i> Load from Sheet 3</button>
-      <button class="btn" onclick="clearSchedule()"><i class="ti ti-trash"></i> Clear</button>
-      <button class="btn primary" onclick="generateSchedule()"><i class="ti ti-wand"></i> Generate schedule</button>
-    </div>
-  </div>
-  <div class="alert alert-info"><i class="ti ti-info-circle"></i> Click "Load from Sheet 3" to auto-populate partners from your outbound requests sheet, then edit as needed before generating.</div>
-  <div class="two-col">
-    <div>
-      <div class="panel" style="margin-bottom:1rem">
-        <div class="panel-title"><div class="panel-title-left"><i class="ti ti-settings"></i> Launch settings</div></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-          <div class="form-group"><label>Internal launch date</label><input type="date" id="launchDate"></div>
-          <div class="form-group"><label>Schedule month</label>
-            <select id="schedMonth"><option value="0">January</option><option value="1">February</option><option value="2">March</option><option value="3">April</option><option value="4">May</option><option value="5">June</option><option value="6">July</option><option value="7">August</option><option value="8">September</option><option value="9">October</option><option value="10">November</option><option value="11">December</option></select>
-          </div>
-        </div>
-      </div>
-      <div class="panel">
-        <div class="panel-title"><div class="panel-title-left"><i class="ti ti-users"></i> Partners this month</div><button class="btn" onclick="addPartnerRow()" style="font-size:12px;padding:4px 10px"><i class="ti ti-plus"></i> Add</button></div>
-        <div id="partnerRows"></div>
-      </div>
-    </div>
-    <div id="schedOutput"><div class="panel"><div class="panel-title"><div class="panel-title-left"><i class="ti ti-list-check"></i> Generated schedule</div></div><div class="empty-state"><i class="ti ti-wand"></i><p>Add partners and click "Generate schedule"</p></div></div></div>
-  </div>
-</div>
-
 <!-- JV PARTNERS -->
 <div id="tab-partners" style="display:none">
   <div class="section-hdr"><div class="section-title">JV partner profiles</div><div class="section-actions"><button class="btn" onclick="syncAllSheets()"><i class="ti ti-refresh"></i> Sync</button></div></div>
-  <div class="alert alert-info"><i class="ti ti-info-circle"></i> Each partner pulls stats from their tab in Outbound A, combined with inbound results (Sheet 1) and internal mailing data (Sheet 5). Click to expand.</div>
+  <div class="alert alert-info"><i class="ti ti-info-circle"></i> Stats pulled from each partner's tab in Outbound A, combined with Sheet 1 inbound results and Sheet 5 internal mailing data. Click any partner to expand.</div>
   <div class="filter-bar"><input type="text" placeholder="Search partners..." oninput="filterPartnerProfiles(this.value)"></div>
   <div id="partnerProfiles"><div class="empty-state"><i class="ti ti-refresh"></i><p>Sync your sheets to load partner profiles.</p></div></div>
 </div>
@@ -222,7 +181,6 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
 <!-- INBOUND SUPPORT -->
 <div id="tab-inbound" style="display:none">
   <div class="section-hdr"><div class="section-title">Inbound support — Sheet 1</div><div class="section-actions"><button class="btn" onclick="syncAllSheets()"><i class="ti ti-refresh"></i> Sync</button></div></div>
-  <div class="alert alert-info"><i class="ti ti-info-circle"></i> Columns mapped: Partner (col B), Name (col C), Core Sales (col E), Clicks (col W), Unique Leads (col X), Total Leads (col Y), EPC (col Z), EPL (col AA).</div>
   <div class="filter-bar"><input type="text" placeholder="Search partners..." oninput="filterTable('inboundTbody',this.value,0)"></div>
   <div class="panel"><div class="table-wrap"><table>
     <thead><tr><th>Partner</th><th>Name</th><th>Core Sales</th><th>Clicks</th><th>Unique Leads</th><th>Total Leads</th><th>EPC</th><th>EPL</th></tr></thead>
@@ -233,7 +191,6 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
 <!-- OUTBOUND REQUESTS -->
 <div id="tab-outbound" style="display:none">
   <div class="section-hdr"><div class="section-title">Outbound requests — Sheet 3</div><div class="section-actions"><button class="btn" onclick="syncAllSheets()"><i class="ti ti-refresh"></i> Sync</button></div></div>
-  <div class="alert alert-info"><i class="ti ti-info-circle"></i> Columns: Affiliate (A), Dates (B), Confirmed (C), # Mailings (E), Place for YOM (F), Promo Notes (G), Cookie (I).</div>
   <div class="filter-bar">
     <input type="text" placeholder="Search affiliates..." oninput="filterTable('outboundTbody',this.value,0)">
     <select onchange="filterTableByCol('outboundTbody',this.value,2)"><option value="">All statuses</option><option value="yes">Confirmed</option><option value="no">Not confirmed</option></select>
@@ -247,7 +204,6 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
 <!-- ONBOARDING PIPELINE -->
 <div id="tab-onboarding" style="display:none">
   <div class="section-hdr"><div class="section-title">Launch onboarding — Sheet 2</div><div class="section-actions"><button class="btn" onclick="syncAllSheets()"><i class="ti ti-refresh"></i> Sync</button></div></div>
-  <div class="alert alert-info"><i class="ti ti-info-circle"></i> Confirmed partners from row 6, declined from row 27. Columns: Past/New (A), Name (B), Confirmed (H), Notes (I), Mailed (M), VIP (Q).</div>
   <div class="filter-bar">
     <input type="text" placeholder="Search..." oninput="filterOnboarding(this.value)">
     <select onchange="filterOnboardingByStatus(this.value)"><option value="">Show both</option><option value="confirmed">Confirmed only</option><option value="declined">Declined only</option></select>
@@ -272,16 +228,14 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
     <button class="btn" onclick="prevMonth()"><i class="ti ti-chevron-left"></i></button>
     <div class="month-label" id="calMonthLabel"></div>
     <button class="btn" onclick="nextMonth()"><i class="ti ti-chevron-right"></i></button>
-    <button class="btn" onclick="switchTabByName('schedule')" style="margin-left:auto;font-size:12px"><i class="ti ti-wand"></i> Schedule builder</button>
+    <button class="btn" onclick="syncCalendar()" style="margin-left:auto;font-size:12px"><i class="ti ti-refresh"></i> Refresh calendar</button>
+  </div>
+  <div class="panel" style="margin-bottom:1rem">
+    <div class="cal-grid" id="calGrid"></div>
   </div>
   <div class="panel">
-    <div class="cal-grid" id="calGrid"></div>
-    <div class="cal-legend">
-      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--blue-bg)"></div> 1st cookie</div>
-      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--green-bg)"></div> last cookie</div>
-      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--amber-bg)"></div> Recommends</div>
-      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--bg-secondary);border:0.5px solid var(--border)"></div> Tuesday (blocked)</div>
-    </div>
+    <div class="panel-title"><div class="panel-title-left"><i class="ti ti-list"></i> This month's events</div></div>
+    <div id="calEventList"><div class="empty-state" style="padding:1.5rem"><i class="ti ti-calendar"></i><p>Sync to load calendar events.</p></div></div>
   </div>
 </div>
 
@@ -290,9 +244,10 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
 const CLIENT_ID='1083602350626-ehdisn3dfp5d2mhsvahp8mbb2tlg0ek2.apps.googleusercontent.com';
-const SCOPES='https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.readonly';
+const SCOPES='https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/calendar.readonly';
 const SID={inbound:'1sxKb8SDHZ7zujcbgzVhIsd2tRmgqIDqok2pIPN7YpsM',onboarding:'1at8pZ-JMuWqR5uE8KF_3RgvUTC7FH7Fd81pBN0MwtJw',requests:'1HAXUIe3dFxmJe0gewq9BTlfgmhrbugNrKEllKnaaH4w',outboundA:'1zSEcdcCM-_xv7Qcd-BcRRh0t_cGP7RooY-IWRQqmz8U',outboundB:'1LH8gAOqsaS6H84MAqyf_wSh2RLgb_7uhvL7-4SPkvKw'};
-let tokenClient,accessToken=null,sheetData={},scheduledMailings=[],calYear=new Date().getFullYear(),calMonth=new Date().getMonth(),prc=0;
+const CAL_NAME='Affiliate Launch Mailings Calendar';
+let tokenClient,accessToken=null,sheetData={},calEvents=[],calYear=new Date().getFullYear(),calMonth=new Date().getMonth();
 const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 
@@ -300,12 +255,14 @@ window.onload=()=>{
   document.getElementById('loadingOverlay').style.display='none';
   const t=sessionStorage.getItem('hub_token');
   if(t){accessToken=t;onSignedIn();}
-  document.getElementById('schedMonth').value=new Date().getMonth();
-  addPartnerRow();addPartnerRow();renderCalendar();
+  renderCalendar();
 };
 
 function handleAuthClick(){
-  if(!tokenClient){tokenClient=google.accounts.oauth2.initTokenClient({client_id:CLIENT_ID,scope:SCOPES,callback:(r)=>{if(r.error){alert('Auth error: '+r.error+'\n\nCheck that your Google account is added as a test user in Google Cloud Console.');return;}accessToken=r.access_token;sessionStorage.setItem('hub_token',accessToken);onSignedIn();syncAllSheets();}});}
+  if(!tokenClient){tokenClient=google.accounts.oauth2.initTokenClient({client_id:CLIENT_ID,scope:SCOPES,callback:(r)=>{
+    if(r.error){alert('Auth error: '+r.error+'\n\nMake sure your Google account is added as a test user in Google Cloud Console.');return;}
+    accessToken=r.access_token;sessionStorage.setItem('hub_token',accessToken);onSignedIn();syncAllSheets();
+  }});}
   tokenClient.requestAccessToken();
 }
 
@@ -330,9 +287,11 @@ async function tabs(id){
 }
 async function firstTab(id,range='A1:Z500'){
   const t=await tabs(id);
-  try{return await api(id,`Sheet1!${range}`);}catch{return t.length?await api(id,`'${t[0]}'!${range}`):[]; }
+  try{return await api(id,`Sheet1!${range}`);}catch{return t.length?await api(id,`'${t[0]}'!${range}`)[];}
 }
+
 function setSS(state,label){document.getElementById('syncDot').className='sync-dot '+(state==='on'?'dot-on':state==='busy'?'dot-busy':'dot-off');document.getElementById('syncLabel').textContent=label;}
+function showErr(msg){const el=document.getElementById('tab-dashboard');if(el){const x=el.querySelector('.sync-error');if(x)x.remove();const d=document.createElement('div');d.className='alert alert-error sync-error';d.innerHTML='<i class="ti ti-alert-circle"></i>'+msg;el.prepend(d);}}
 
 async function syncAllSheets(){
   if(!accessToken){handleAuthClick();return;}
@@ -344,18 +303,35 @@ async function syncAllSheets(){
       firstTab(SID.outboundB,'A1:W500').then(r=>sheetData.outboundB=r),
       api(SID.onboarding,'A6:R26').then(r=>sheetData.confirmed=r),
       api(SID.onboarding,'A27:R200').then(r=>sheetData.declined=r),
-      tabs(SID.outboundA).then(t=>{sheetData.partnerTabs=t.filter(x=>x&&!['Sheet1','Summary','Overview','Instructions'].includes(x)&&!x.toLowerCase().startsWith('sheet'));})
+      tabs(SID.outboundA).then(t=>{sheetData.partnerTabs=t.filter(x=>x&&!['Sheet1','Summary','Overview','Instructions'].includes(x)&&!/^sheet\d/i.test(x));}),
+      syncCalendar()
     ]);
     const ptabs=sheetData.partnerTabs||[];
-    const results=await Promise.allSettled(ptabs.slice(0,45).map(tab=>api(SID.outboundA,`'${tab}'!A1:K30`)));
+    const results=await Promise.allSettled(ptabs.slice(0,45).map(tab=>api(SID.outboundA,`'${tab}'!A1:L50`)));
     sheetData.partnerStats={};
     results.forEach((r,i)=>{if(r.status==='fulfilled')sheetData.partnerStats[ptabs[i]]=r.value;});
     setSS('on','Synced · '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}));
     refreshAll();
-  }catch(e){
-    setSS('off','Sync error');console.error(e);
-    showErr('Sync failed: '+e.message);
-  }
+  }catch(e){setSS('off','Sync error');console.error(e);showErr('Sync failed: '+e.message+' — try signing out and back in.');}
+}
+
+async function syncCalendar(){
+  if(!accessToken)return;
+  try{
+    // Find the calendar by name
+    const calsResp=await fetch('https://www.googleapis.com/calendar/v3/users/me/calendarList',{headers:{Authorization:'Bearer '+accessToken}});
+    const calsData=await calsResp.json();
+    const cal=(calsData.items||[]).find(c=>c.summary&&c.summary.toLowerCase().includes('affiliate launch'));
+    if(!cal){console.warn('Calendar "'+CAL_NAME+'" not found. Available:',( calsData.items||[]).map(c=>c.summary));sheetData.calId=null;return;}
+    sheetData.calId=cal.id;
+    // Fetch events for ±3 months
+    const now=new Date();
+    const tMin=new Date(now.getFullYear(),now.getMonth()-1,1).toISOString();
+    const tMax=new Date(now.getFullYear(),now.getMonth()+4,0).toISOString();
+    const evResp=await fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(cal.id)}/events?timeMin=${tMin}&timeMax=${tMax}&singleEvents=true&orderBy=startTime&maxResults=200`,{headers:{Authorization:'Bearer '+accessToken}});
+    const evData=await evResp.json();
+    calEvents=(evData.items||[]).map(e=>({title:e.summary||'(no title)',date:e.start?.date||e.start?.dateTime?.slice(0,10)||'',id:e.id})).filter(e=>e.date);
+  }catch(e){console.error('Calendar sync error:',e);}
 }
 
 function refreshAll(){refreshDash();refreshPartners();refreshInbound();refreshOutbound();refreshOnboarding();renderCalendar();}
@@ -365,20 +341,20 @@ function refreshDash(){
   document.getElementById('mTotal').textContent=ptabs.length||'—';
   const conf=(sheetData.confirmed||[]).filter(r=>r[1]).length;
   document.getElementById('mConfirmed').textContent=conf||'—';
-  document.getElementById('mMailings').textContent=scheduledMailings.length||'—';
+  const now=new Date();const upcoming=calEvents.filter(e=>new Date(e.date+'T00:00:00')>=now);
+  document.getElementById('mMailings').textContent=upcoming.length||'—';
   const req=sheetData.requests||[];
   const pending=req.filter((r,i)=>i>0&&r[0]&&!(r[2]||'').toLowerCase().includes('yes')).length;
   document.getElementById('mPendingOut').textContent=pending||'—';
   const b=sheetData.outboundB||[];
   document.getElementById('mTracked').textContent=b.length>1?b.length-1:'—';
+  // Flags
   const flags=[];
   if(pending>0)flags.push(`${pending} outbound request(s) not yet confirmed by affiliates.`);
-  scheduledMailings.filter(m=>m.start&&m.end&&(new Date(m.end)-new Date(m.start))/86400000<=5).forEach(m=>flags.push(`${m.name}: tight promo window — prioritize scheduling.`));
   document.getElementById('dashFlags').innerHTML=flags.length?flags.map(f=>`<div class="alert alert-warn"><i class="ti ti-alert-triangle"></i>${f}</div>`).join(''):'<div class="empty-state"><i class="ti ti-check"></i><p>No flags right now.</p></div>';
-  if(scheduledMailings.length){
-    const s=[...scheduledMailings].sort((a,b)=>new Date(a.date)-new Date(b.date));
-    document.getElementById('dashUpcoming').innerHTML=s.slice(0,6).map(m=>{const d=new Date(m.date+'T00:00:00');const cls=m.cookie==='1st'?'b-1st':m.cookie==='last'?'b-last':m.cookie==='rec'?'b-rec':'b-evgrn';return`<div class="mail-item"><div class="mail-date">${d.getMonth()+1}/${d.getDate()}</div><div class="mail-info"><div class="pname">${m.name}</div><div class="pdetail">#${m.num} · ${m.windowStr||''}</div></div><span class="badge ${cls}">${m.cookie==='rec'?'Rec':m.cookie}</span></div>`;}).join('');
-  }
+  // Upcoming from calendar
+  const next=upcoming.slice(0,8);
+  document.getElementById('dashUpcoming').innerHTML=next.length?next.map(e=>{const d=new Date(e.date+'T00:00:00');return`<div class="mail-item"><div class="mail-date">${d.getMonth()+1}/${d.getDate()}</div><div class="mail-info"><div class="pname">${e.title}</div></div></div>`;}).join(''):'<div class="empty-state"><i class="ti ti-calendar"></i><p>No upcoming calendar events found.</p></div>';
 }
 
 function refreshPartners(){
@@ -387,23 +363,55 @@ function refreshPartners(){
   const inRows=sheetData.inbound||[];
   const bRows=sheetData.outboundB||[];
   document.getElementById('partnerProfiles').innerHTML=ptabs.map(tab=>{
-    const stats=sheetData.partnerStats?.[tab]||[];
-    const launches=[];let curYear='';
-    stats.forEach(row=>{
-      if(!row||!row[0])return;
-      const c=String(row[0]).trim();
-      if(/^20\d\d$/.test(c)){curYear=c;return;}
-      if(row[1]&&String(row[1]).replace(/[$,]/g,'').trim()&&!isNaN(String(row[1]).replace(/[$,]/g,'').trim())){
-        launches.push({year:curYear,program:row[0],clicks:row[1],uLeads:row[2],rawLeads:row[3],commission:row[4],yomClicks:row[6],yomULeads:row[7],yomRaw:row[8],yomCom:row[9]});
+    const raw=sheetData.partnerStats?.[tab]||[];
+
+    // Parse the tab: find year markers, section headers, data rows, totals
+    // Structure: year row, then "Their Stats Results for X" header row, then col headers, then data rows, then TOTALS row
+    // Then blank, then "YOM Stats Results for X" header, col headers, data, TOTALS
+    const sections=[];let curYear='',curSection=null;
+    raw.forEach(row=>{
+      if(!row||row.every(c=>!c))return;
+      const c0=String(row[0]||'').trim();const c1=String(row[1]||'').trim();
+      // Year row: first cell is 4-digit year
+      if(/^20\d\d$/.test(c0)&&!c1){curYear=c0;return;}
+      // Section header row: empty first cell, second cell contains "Stats Results"
+      if(!c0&&c1.toLowerCase().includes('stats results')){
+        curSection={year:curYear,title:c1,isYOM:c1.toLowerCase().includes('for '+(tab.toLowerCase().split(' ')[0])||c1.toLowerCase().includes('marci')||c1.toLowerCase().includes('yom')),rows:[],totals:null};
+        // isYOM = this section shows THEIR stats (outbound = what they did for YOM)
+        // We'll use position: first section = Their stats for YOM, second = YOM stats for them
+        sections.push(curSection);return;
       }
+      // Column header row: first cell is "Program"
+      if(c0.toLowerCase()==='program')return;
+      // Totals row
+      if(c0.toUpperCase()==='TOTALS'&&curSection){curSection.totals=row;return;}
+      // Data row: has program name and at least one number
+      if(c0&&curSection&&row.length>1){curSection.rows.push(row);}
     });
-    const recent=launches.slice(-3);
+
+    // First section = their stats for YOM, second = YOM's stats for them
+    const theirSection=sections[0]||null;
+    const yomSection=sections[1]||null;
+
+    // Summary for collapsed view
+    const latestClicks=theirSection?.rows?.[theirSection.rows.length-1]?.[1]||'—';
     const inRow=inRows.find(r=>r&&r[1]&&r[1].toLowerCase().includes(tab.toLowerCase().split(' ')[0]));
-    const bMatch=bRows.filter(r=>r&&r[1]&&r[1].toLowerCase().includes(tab.toLowerCase().split(' ')[0]));
-    const latestClicks=recent.length?recent[recent.length-1].clicks:'—';
     const latestSales=inRow?inRow[4]:'—';
     const latestEPC=inRow?inRow[25]:'—';
     const pid='pp_'+tab.replace(/[^a-z0-9]/gi,'_');
+
+    function renderStatsTable(section,label){
+      if(!section||!section.rows.length)return`<div style="font-size:12px;color:var(--text-secondary);padding:8px">${label}: no data found</div>`;
+      let h=`<div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-secondary);margin-bottom:6px">${section.year||''} — ${section.title}</div>`;
+      h+=`<table class="stats-table"><thead><tr><th>Program</th><th>Clicks</th><th>Unique Leads</th><th>Raw Leads</th><th>Commission</th></tr></thead><tbody>`;
+      section.rows.forEach(r=>{h+=`<tr><td>${r[0]||'—'}</td><td>${r[1]||'—'}</td><td>${r[2]||'—'}</td><td>${r[3]||'—'}</td><td>${r[4]||'—'}</td></tr>`;});
+      if(section.totals){h+=`<tr class="totals-row"><td>TOTALS</td><td>${section.totals[1]||'—'}</td><td>${section.totals[2]||'—'}</td><td>${section.totals[3]||'—'}</td><td>${section.totals[4]||'—'}</td></tr>`;}
+      h+=`</tbody></table>`;return h;
+    }
+
+    // Internal mailing matches
+    const bMatch=bRows.filter(r=>r&&r[1]&&r[1].toLowerCase().includes(tab.toLowerCase().split(' ')[0]));
+
     return`<div class="partner-profile" id="${pid}">
       <div class="partner-profile-header" onclick="toggleProfile(this)">
         <div class="partner-profile-name"><i class="ti ti-chevron-right" style="font-size:14px;transition:transform 0.2s"></i>${tab}</div>
@@ -415,17 +423,11 @@ function refreshPartners(){
         </div>
       </div>
       <div class="partner-profile-body">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
-          <div>
-            <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-secondary);margin-bottom:8px">Their stats for YOM — last ${recent.length} launches</div>
-            ${recent.length?recent.map(l=>`<div class="launch-row"><span class="launch-label">${l.year||'Launch'}</span><span style="min-width:80px">Clicks: ${l.clicks||'—'}</span><span style="min-width:80px">Leads: ${l.uLeads||'—'}</span><span>Com: ${l.commission||'—'}</span></div>`).join(''):'<div style="font-size:12px;color:var(--text-secondary)">No launch history found in this tab</div>'}
-          </div>
-          <div>
-            <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-secondary);margin-bottom:8px">YOM results for them — Sheet 1</div>
-            ${inRow?`<div class="launch-row"><span class="launch-label">Core sales</span><span>${inRow[4]||'—'}</span></div><div class="launch-row"><span class="launch-label">Clicks</span><span>${inRow[22]||'—'}</span></div><div class="launch-row"><span class="launch-label">Unique leads</span><span>${inRow[23]||'—'}</span></div><div class="launch-row"><span class="launch-label">Total leads</span><span>${inRow[24]||'—'}</span></div><div class="launch-row"><span class="launch-label">EPC</span><span>${inRow[25]||'—'}</span></div><div class="launch-row"><span class="launch-label">EPL</span><span>${inRow[26]||'—'}</span></div>`:'<div style="font-size:12px;color:var(--text-secondary)">No match found in Sheet 1</div>'}
-          </div>
+        <div class="two-col" style="margin-bottom:1rem">
+          <div>${renderStatsTable(theirSection,'Their stats for YOM')}</div>
+          <div>${renderStatsTable(yomSection,'YOM stats for them')}</div>
         </div>
-        ${bMatch.length?`<div><div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-secondary);margin-bottom:8px">Internal mailing data — Sheet 5 (last ${Math.min(bMatch.length,5)} mailings)</div><div class="table-wrap"><table><thead><tr><th>Date</th><th>Subject</th><th>Sent</th><th>Opens</th><th>% Open</th><th>Clicks</th><th>% CTR</th><th>EPC</th></tr></thead><tbody>${bMatch.slice(-5).map(r=>`<tr><td>${r[0]||'—'}</td><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r[2]||'—'}</td><td>${r[4]||'—'}</td><td>${r[5]||'—'}</td><td>${r[6]||'—'}</td><td>${r[7]||'—'}</td><td>${r[8]||'—'}</td><td>${r[20]||'—'}</td></tr>`).join('')}</tbody></table></div></div>`:''}
+        ${bMatch.length?`<div style="margin-top:0.5rem"><div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-secondary);margin-bottom:6px">Internal mailing data — Sheet 5 (last ${Math.min(bMatch.length,5)} mailings)</div><div class="table-wrap"><table class="stats-table"><thead><tr><th>Date</th><th>Subject</th><th>Sent</th><th>Opens</th><th>% Open</th><th>Clicks</th><th>% CTR</th><th>EPC</th></tr></thead><tbody>${bMatch.slice(-5).map(r=>`<tr><td>${r[0]||'—'}</td><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r[2]||'—'}</td><td>${r[4]||'—'}</td><td>${r[5]||'—'}</td><td>${r[6]||'—'}</td><td>${r[7]||'—'}</td><td>${r[8]||'—'}</td><td>${r[20]||'—'}</td></tr>`).join('')}</tbody></table></div></div>`:''}
       </div>
     </div>`;
   }).join('');
@@ -436,14 +438,11 @@ function filterPartnerProfiles(v){document.querySelectorAll('.partner-profile').
 
 function refreshInbound(){
   const rows=sheetData.inbound||[];if(rows.length<2)return;
-  // Sheet 1: row0=year header, row1=col headers. Data from row2.
-  // Col indices: B=1(Partner), C=2(Name), E=4(Core Sales), W=22(Clicks), X=23(UniqueLeads), Y=24(TotalLeads), Z=25(EPC), AA=26(EPL)
   document.getElementById('inboundTbody').innerHTML=rows.filter(r=>r&&r[1]&&r[1]!=='Partner').map(r=>`<tr><td class="name-cell">${r[1]||'—'}</td><td>${r[2]||'—'}</td><td>${r[4]||'—'}</td><td>${r[22]||'—'}</td><td>${r[23]||'—'}</td><td>${r[24]||'—'}</td><td>${r[25]||'—'}</td><td>${r[26]||'—'}</td></tr>`).join('');
 }
 
 function refreshOutbound(){
   const rows=sheetData.requests||[];if(rows.length<2)return;
-  // Col: A=0(Affiliate), B=1(Dates), C=2(Confirmed?), D=3(empty), E=4(#mailings), F=5(PlaceForYOM), G=6(PromoNotes), H=7(AddlNotes), I=8(Cookie)
   document.getElementById('outboundTbody').innerHTML=rows.filter(r=>r&&r[0]&&r[0]!=='Affiliate').map(r=>{
     const cv=(r[2]||'').toLowerCase();const sc=cv.includes('yes')?'b-confirmed':cv.includes('no')?'b-declined':'b-pending';
     const ck=(r[8]||'').toLowerCase();const cc=ck.includes('1st')?'b-1st':ck.includes('last')?'b-last':ck.includes('rec')?'b-rec':'b-evgrn';
@@ -452,13 +451,9 @@ function refreshOutbound(){
 }
 
 function refreshOnboarding(){
-  // Sheet 2 confirmed: A=0(Past/New), B=1(NAME), C=2(CODE), D=3(CONTACT), E=4(EMAIL), H=7(CONFIRMED), I=8(NOTES), M=12(Mailed?), Q=16(VIP?)
   const conf=(sheetData.confirmed||[]).filter(r=>r[1]&&r[1]!=='NAME');
   document.getElementById('confirmedCount').textContent=conf.length;
-  document.getElementById('confirmedTbody').innerHTML=conf.map(r=>{
-    const cv=(r[7]||'').toLowerCase();const sc=cv==='yes'||cv==='y'?'b-confirmed':cv==='no'||cv==='n'?'b-declined':'b-pending';
-    return`<tr><td class="name-cell">${r[1]||'—'}</td><td>${r[0]||'—'}</td><td><span class="badge ${sc}">${r[7]||'—'}</span></td><td>${r[12]||'—'}</td><td>${r[16]||'—'}</td><td style="font-size:12px;color:var(--text-secondary)">${r[8]||''}</td></tr>`;
-  }).join('')||'<tr><td colspan="6" style="text-align:center;padding:1rem;color:var(--text-secondary)">No confirmed partners found</td></tr>';
+  document.getElementById('confirmedTbody').innerHTML=conf.map(r=>{const cv=(r[7]||'').toLowerCase();const sc=cv==='yes'||cv==='y'?'b-confirmed':cv==='no'||cv==='n'?'b-declined':'b-pending';return`<tr><td class="name-cell">${r[1]||'—'}</td><td>${r[0]||'—'}</td><td><span class="badge ${sc}">${r[7]||'—'}</span></td><td>${r[12]||'—'}</td><td>${r[16]||'—'}</td><td style="font-size:12px;color:var(--text-secondary)">${r[8]||''}</td></tr>`;}).join('')||'<tr><td colspan="6" style="text-align:center;padding:1rem;color:var(--text-secondary)">No confirmed partners found</td></tr>';
   const decl=(sheetData.declined||[]).filter(r=>r[1]&&r[1]!=='NAME');
   document.getElementById('declinedCount').textContent=decl.length;
   document.getElementById('declinedTbody').innerHTML=decl.map(r=>`<tr><td class="name-cell">${r[1]||'—'}</td><td>${r[0]||'—'}</td><td style="font-size:12px;color:var(--text-secondary)">${r[8]||''}</td></tr>`).join('')||'<tr><td colspan="3" style="text-align:center;padding:1rem;color:var(--text-secondary)">No declined partners found</td></tr>';
@@ -467,92 +462,39 @@ function refreshOnboarding(){
 function filterOnboarding(v){['confirmedTbody','declinedTbody'].forEach(id=>{document.querySelectorAll('#'+id+' tr').forEach(r=>{r.style.display=(r.cells[0]?.textContent||'').toLowerCase().includes(v.toLowerCase())?'':'none';});});}
 function filterOnboardingByStatus(v){document.getElementById('confirmedPanel').style.display=(v===''||v==='confirmed')?'':'none';document.getElementById('declinedPanel').style.display=(v===''||v==='declined')?'':'none';}
 
-function loadFromSheet3(){
-  const rows=sheetData.requests||[];
-  if(rows.length<2){alert('Sync your sheets first, then click Load from Sheet 3.');return;}
-  document.getElementById('partnerRows').innerHTML='';prc=0;
-  rows.filter(r=>r&&r[0]&&r[0]!=='Affiliate').forEach(r=>{
-    prc++;const id='pr-'+prc;const div=document.createElement('div');div.className='partner-row';div.id=id;
-    const ck=(r[8]||'').toLowerCase();const cs=ck.includes('1st')?'1st':ck.includes('last')?'last':ck.includes('rec')?'rec':'evgrn';
-    div.innerHTML=`<div class="form-group" style="flex:2;min-width:120px"><label>Partner</label><input type="text" value="${r[0]}"></div>
-    <div class="form-group" style="min-width:90px"><label>Cookie</label><select><option value="1st"${cs==='1st'?' selected':''}>1st</option><option value="last"${cs==='last'?' selected':''}>last</option><option value="rec"${cs==='rec'?' selected':''}>Recommends</option><option value="evgrn"${cs==='evgrn'?' selected':''}>evgrn</option></select></div>
-    <div class="form-group" style="min-width:120px"><label>Window start</label><input type="date"></div>
-    <div class="form-group" style="min-width:120px"><label>Window end</label><input type="date"></div>
-    <div class="form-group" style="max-width:70px"><label># Mailings</label><input type="number" min="1" max="5" value="${r[4]||1}"></div>
-    <div class="form-group" style="max-width:36px;justify-content:flex-end"><label style="opacity:0">x</label><button class="btn" style="padding:6px 8px;color:var(--red-text)" onclick="document.getElementById('${id}').remove()"><i class="ti ti-x"></i></button></div>`;
-    document.getElementById('partnerRows').appendChild(div);
-  });
-  if(!prc)alert('No partner rows found in Sheet 3.');
-}
-
-function addPartnerRow(){
-  prc++;const id='pr-'+prc;const div=document.createElement('div');div.className='partner-row';div.id=id;
-  div.innerHTML=`<div class="form-group" style="flex:2;min-width:120px"><label>Partner</label><input type="text" placeholder="e.g. Michael Stone"></div>
-  <div class="form-group" style="min-width:90px"><label>Cookie</label><select><option value="1st">1st</option><option value="last">last</option><option value="rec">Recommends</option><option value="evgrn">evgrn</option></select></div>
-  <div class="form-group" style="min-width:120px"><label>Window start</label><input type="date"></div>
-  <div class="form-group" style="min-width:120px"><label>Window end</label><input type="date"></div>
-  <div class="form-group" style="max-width:70px"><label># Mailings</label><input type="number" min="1" max="5" value="1"></div>
-  <div class="form-group" style="max-width:36px;justify-content:flex-end"><label style="opacity:0">x</label><button class="btn" style="padding:6px 8px;color:var(--red-text)" onclick="document.getElementById('${id}').remove()"><i class="ti ti-x"></i></button></div>`;
-  document.getElementById('partnerRows').appendChild(div);
-}
-
-function clearSchedule(){document.getElementById('schedOutput').innerHTML='<div class="panel"><div class="panel-title"><div class="panel-title-left"><i class="ti ti-list-check"></i> Generated schedule</div></div><div class="empty-state"><i class="ti ti-wand"></i><p>Add partners and click "Generate schedule"</p></div></div>';scheduledMailings=[];renderCalendar();}
-
-function generateSchedule(){
-  const lv=document.getElementById('launchDate').value;const ld=lv?new Date(lv+'T00:00:00'):null;
-  const partners=[];
-  document.querySelectorAll('#partnerRows .partner-row').forEach(row=>{
-    const inp=row.querySelectorAll('input,select');const name=inp[0].value.trim();const cookie=inp[1].value;
-    const start=inp[2].value?new Date(inp[2].value+'T00:00:00'):null;const end=inp[3].value?new Date(inp[3].value+'T00:00:00'):null;
-    const count=parseInt(inp[4].value)||1;if(name)partners.push({name,cookie,start,end,count});
-  });
-  if(!partners.length)return;
-  const used=new Set(),sched={},warns=[];scheduledMailings=[];
-  partners.forEach(p=>{
-    if(!p.start||!p.end){warns.push(p.name+': no promo window — skipped');return;}
-    let cands=[];
-    for(let d=new Date(p.start);d<=p.end;d=new Date(d.getFullYear(),d.getMonth(),d.getDate()+1)){if(ld&&d<ld)continue;if(d.getDay()===2)continue;cands.push(new Date(d));}
-    if(!cands.length){warns.push(p.name+': no valid days in window');return;}
-    if(p.cookie==='last')cands=cands.reverse();
-    for(let i=0;i<p.count;i++){
-      let chosen=null;const sl=p.count>1?cands.slice(Math.floor((i/p.count)*cands.length)):cands;
-      for(const day of(sl.length?sl:cands)){const k=fmt(day);const pv=fmt(new Date(day.getFullYear(),day.getMonth(),day.getDate()-1));const nx=fmt(new Date(day.getFullYear(),day.getMonth(),day.getDate()+1));if(p.cookie==='rec'){chosen=day;break;}if(!used.has(k)&&!used.has(pv)&&!used.has(nx)){chosen=day;break;}if(!chosen&&!used.has(k))chosen=day;}
-      if(!chosen){chosen=cands[Math.min(i,cands.length-1)];warns.push(p.name+' #'+(i+1)+': unavoidable conflict');}
-      const k=fmt(chosen);if(!sched[k])sched[k]=[];
-      const e={name:p.name,cookie:p.cookie,num:i+1,windowStr:(p.start.getMonth()+1)+'/'+p.start.getDate()+'–'+(p.end.getMonth()+1)+'/'+p.end.getDate(),date:k,start:fmt(p.start),end:fmt(p.end)};
-      sched[k].push(e);scheduledMailings.push(e);if(p.cookie!=='rec')used.add(k);
-    }
-  });
-  const keys=Object.keys(sched).sort();
-  let html='<div class="panel"><div class="panel-title"><div class="panel-title-left"><i class="ti ti-list-check"></i> Generated schedule</div><button class="btn" style="font-size:12px;padding:4px 10px" onclick="copyScheduleText()"><i class="ti ti-copy"></i> Copy</button></div>';
-  warns.forEach(w=>{html+='<div class="warn-item"><i class="ti ti-alert-triangle"></i>'+w+'</div>';});
-  html+='<div>';
-  keys.forEach(k=>{const d=new Date(k+'T00:00:00');html+='<div class="schedule-item"><div class="schedule-date">'+(d.getMonth()+1)+'/'+d.getDate()+'<br><span class="dow">'+DAYS[d.getDay()]+(d.getDay()===2?' ⚠':'')+'</span></div><div class="schedule-entries">';sched[k].forEach(e=>{const cls=e.cookie==='1st'?'b-1st':e.cookie==='last'?'b-last':e.cookie==='rec'?'b-rec':'b-evgrn';html+='<div class="schedule-entry"><span class="badge '+cls+'">'+(e.cookie==='rec'?'Rec':e.cookie)+'</span><span>'+e.name+' #'+e.num+' ('+e.windowStr+')</span></div>';});html+='</div></div>';});
-  html+='</div></div>';
-  document.getElementById('schedOutput').innerHTML=html;document.getElementById('mMailings').textContent=keys.length;refreshDash();renderCalendar();
-}
-
-function copyScheduleText(){let t='';document.querySelectorAll('.schedule-item').forEach(item=>{const d=item.querySelector('.schedule-date').innerText.replace(/\n/g,' ').trim();item.querySelectorAll('.schedule-entry').forEach(e=>{t+=d+' - '+e.textContent.trim()+'\n';});});navigator.clipboard.writeText(t).catch(()=>{});}
-
 function renderCalendar(){
   document.getElementById('calMonthLabel').textContent=MONTHS[calMonth]+' '+calYear;
-  const lv=document.getElementById('launchDate')?.value;const ld=lv?new Date(lv+'T00:00:00'):null;
-  const first=new Date(calYear,calMonth,1).getDay();const dim=new Date(calYear,calMonth+1,0).getDate();
+  const first=new Date(calYear,calMonth,1).getDay();
+  const dim=new Date(calYear,calMonth+1,0).getDate();
+  const monthEvents=calEvents.filter(e=>{const d=new Date(e.date+'T00:00:00');return d.getFullYear()===calYear&&d.getMonth()===calMonth;});
+  // Grid
   let html=DAYS.map(d=>'<div class="cal-hdr">'+d+'</div>').join('');
   for(let i=0;i<first;i++)html+='<div></div>';
-  for(let d=1;d<=dim;d++){const ds=calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');const do_=new Date(calYear,calMonth,d);const isTue=do_.getDay()===2;const bl=ld&&do_<ld;const dm=scheduledMailings.filter(m=>m.date===ds);let cls='cal-day'+(isTue?' tuesday':'')+(dm.length?' has-mail':'')+(bl?' before-launch':'');html+='<div class="'+cls+'"><div class="cal-num">'+d+'</div>';dm.forEach(m=>{const ec=m.cookie==='1st'?'ce-1st':m.cookie==='last'?'ce-last':m.cookie==='rec'?'ce-rec':'';html+='<div class="cal-entry '+ec+'">'+m.name.split(' ')[0]+' #'+m.num+'</div>';});html+='</div>';}
+  for(let d=1;d<=dim;d++){
+    const ds=calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const dayEvs=monthEvents.filter(e=>e.date===ds);
+    html+='<div class="cal-day'+(dayEvs.length?' has-event':'')+'"><div class="cal-num">'+d+'</div>';
+    dayEvs.forEach(e=>{html+='<div class="cal-entry" title="'+e.title+'">'+e.title+'</div>';});
+    html+='</div>';
+  }
   document.getElementById('calGrid').innerHTML=html;
+  // Event list
+  const listEl=document.getElementById('calEventList');
+  if(!monthEvents.length){listEl.innerHTML='<div class="empty-state" style="padding:1.5rem"><i class="ti ti-calendar"></i><p>No events this month in "'+CAL_NAME+'".</p></div>';return;}
+  listEl.innerHTML=monthEvents.sort((a,b)=>a.date.localeCompare(b.date)).map(e=>{
+    const d=new Date(e.date+'T00:00:00');
+    return`<div class="event-list-item"><div class="event-dot"></div><div class="event-date-label">${DAYS[d.getDay()]} ${d.getMonth()+1}/${d.getDate()}</div><div>${e.title}</div></div>`;
+  }).join('');
 }
 
 function prevMonth(){calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
 function nextMonth(){calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCalendar();}
+
 function switchTab(name,btn){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');showTab(name);}
 function showTab(name){document.querySelectorAll('[id^="tab-"]').forEach(el=>el.style.display='none');const el=document.getElementById('tab-'+name);if(el)el.style.display='block';if(name==='calendar')renderCalendar();}
 function switchTabByName(name){document.querySelectorAll('.tab-btn').forEach(btn=>{if(btn.getAttribute('onclick')?.includes("'"+name+"'"))btn.click();});}
 function filterTable(id,v,col){document.querySelectorAll('#'+id+' tr').forEach(r=>{r.style.display=(r.cells[col]?.textContent||'').toLowerCase().includes(v.toLowerCase())?'':'none';});}
 function filterTableByCol(id,v,col){if(!v){document.querySelectorAll('#'+id+' tr').forEach(r=>r.style.display='');return;}document.querySelectorAll('#'+id+' tr').forEach(r=>{r.style.display=(r.cells[col]?.textContent||'').toLowerCase().includes(v.toLowerCase())?'':'none';});}
-function fmt(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-function showErr(msg){const el=document.getElementById('tab-dashboard');if(el){const x=el.querySelector('.sync-error');if(x)x.remove();const div=document.createElement('div');div.className='alert alert-error sync-error';div.innerHTML='<i class="ti ti-alert-circle"></i>'+msg;el.prepend(div);}}
 </script>
 </body>
 </html>
