@@ -287,7 +287,7 @@ async function tabs(id){
 }
 async function firstTab(id,range='A1:Z500'){
   const t=await tabs(id);
-  try{return await api(id,`Sheet1!${range}`);}catch{return t.length?await api(id,`'${t[0]}'!${range}`)[];}
+  try{return await api(id,`Sheet1!${range}`);}catch{return t.length?await api(id,`'${t[0]}'!${range}`):[];}
 }
 
 function setSS(state,label){document.getElementById('syncDot').className='sync-dot '+(state==='on'?'dot-on':state==='busy'?'dot-busy':'dot-off');document.getElementById('syncLabel').textContent=label;}
