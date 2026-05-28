@@ -341,7 +341,6 @@ async function syncCalendar(){
     const evData=await apiGet(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CAL_ID)}/events?timeMin=${tMin}&timeMax=${tMax}&singleEvents=true&orderBy=startTime&maxResults=250`);
     calEvents=(evData.items||[]).map(e=>({title:e.summary||'(no title)',date:(e.start?.date||e.start?.dateTime||'').slice(0,10)})).filter(e=>e.date);
     if(errEl)errEl.style.display='none';
-    console.log('Loaded',calEvents.length,'calendar events');
   }catch(e){
     console.error('Calendar error:',e);
     if(errEl){errEl.style.display='block';errEl.innerHTML='<div class="alert alert-error"><i class="ti ti-alert-circle"></i>Calendar error: '+e.message+'</div>';}
@@ -370,34 +369,54 @@ function refreshDash(){
   document.getElementById('dashUpcoming').innerHTML=next.length?next.map(e=>{const d=new Date(e.date+'T00:00:00');return'<div class="mail-item"><div class="mail-date">'+(d.getMonth()+1)+'/'+d.getDate()+'</div><div class="mail-info"><div class="pname">'+e.title+'</div></div></div>';}).join(''):'<div class="empty-state"><i class="ti ti-calendar"></i><p>No upcoming events.</p></div>';
 }
 
-function numVal(v){if(!v)return null;const n=parseFloat(String(v).replace(/[$,]/g,''));return isNaN(n)?null:n;}
+function numVal(v){
+  if(!v)return null;
+  const n=parseFloat(String(v).replace(/[$,]/g,''));
+  return isNaN(n)?null:n;
+}
 
 function parsePartnerTab(raw){
-  const yearMap={};let curYear='';let curSide=null;
+  // Sheet layout per Debra's tab:
+  // Row 1: Partner name in A
+  // Row 2: Year (e.g. "2026") in A
+  // Row 3: empty A, "Debra Stats Results for us" in B | empty G, "Marci Stats Results for Debra" in H
+  // Row 4: "Program" in A (their headers) | "Program" in G (yom headers)
+  // Row 5+: data in cols A-E (their) | data in cols G-K (yom)
+  // Row 10: "TOTALS" in A | "TOTALS" in G
+  const yearMap={};let curYear='';
   raw.forEach(row=>{
     if(!row||row.every(c=>!String(c||'').trim()))return;
     const c0=String(row[0]||'').trim();
     const c1=String(row[1]||'').trim();
-    const c6=String(row[6]||'').trim();
-    if(/^20\d\d$/.test(c0)&&!c1&&!c6){
+    const c7=String(row[7]||'').trim(); // H column = index 7
+    const c6=String(row[6]||'').trim(); // G column = index 6
+
+    // Year row: col A is 4-digit year
+    if(/^20\d\d$/.test(c0)&&!c1){
       curYear=c0;
       if(!yearMap[curYear])yearMap[curYear]={year:curYear,their:{title:'',rows:[],totals:null},yom:{title:'',rows:[],totals:null}};
-      curSide=null;return;
+      return;
     }
     if(!curYear)return;
     const y=yearMap[curYear];
-    if(!c0&&c1.toLowerCase().includes('stats results')){y.their.title=c1;curSide='their';return;}
-    if(!c0&&c6.toLowerCase().includes('stats results')){y.yom.title=c6;curSide='yom';return;}
+
+    // Section headers: col B has "Stats Results" = their section; col H has "Stats Results" = yom section
+    if(!c0&&c1.toLowerCase().includes('stats results')){y.their.title=c1;return;}
+    if(!c0&&c7.toLowerCase().includes('stats results')){y.yom.title=c7;return;}
+
+    // Skip column header rows (Program in col A or col G)
     if(c0.toLowerCase()==='program')return;
-    if(c0.toUpperCase()==='TOTALS'){
-      if(curSide==='their')y.their.totals=[...row];
-      else if(curSide==='yom')y.yom.totals=[...row];
-      return;
-    }
-    if(c0&&curSide==='their'){
+
+    // TOTALS row: "TOTALS" in col A = their totals; "TOTALS" in col G = yom totals
+    if(c0.toUpperCase()==='TOTALS'){y.their.totals=[...row];}
+    if(c6.toUpperCase()==='TOTALS'){y.yom.totals=[...row];}
+    if(c0.toUpperCase()==='TOTALS'||c6.toUpperCase()==='TOTALS')return;
+
+    // Data rows: their data in cols A(0)-E(4), yom data in cols G(6)-K(10)
+    if(c0){
       y.their.rows.push({program:row[0],clicks:row[1],uLeads:row[2],rawLeads:row[3],commission:row[4]});
     }
-    if(c0&&curSide==='yom'){
+    if(c6&&c6.toLowerCase()!=='program'){
       y.yom.rows.push({program:row[6],clicks:row[7],uLeads:row[8],rawLeads:row[9],commission:row[10]});
     }
   });
@@ -415,6 +434,7 @@ function renderStatsTable(section,label,isYom){
   });
   if(section.totals){
     const t=section.totals;
+    // their totals: cols 0-4 (A-E); yom totals: cols 6-10 (G-K)
     const o=isYom?6:0;
     h+='<tr class="totals-row"><td>TOTALS</td><td>'+(t[o+1]||'—')+'</td><td>'+(t[o+2]||'—')+'</td><td>'+(t[o+3]||'—')+'</td><td>'+(t[o+4]||'—')+'</td></tr>';
   }
@@ -423,10 +443,14 @@ function renderStatsTable(section,label,isYom){
 }
 
 function renderExchangeBar(yb){
+  // Their total clicks: their totals row col 1 (B)
   const theirClicks=numVal(yb.their.totals?.[1])||yb.their.rows.reduce((s,r)=>s+(numVal(r.clicks)||0),0);
+  // YOM total clicks: yom totals row col 7 (H)
   const yomClicks=numVal(yb.yom.totals?.[7])||yb.yom.rows.reduce((s,r)=>s+(numVal(r.clicks)||0),0);
   if(!theirClicks&&!yomClicks)return'';
   const diff=theirClicks-yomClicks;
+  // Red = their clicks > our clicks (we owe them more clicks)
+  // Green = our clicks >= their clicks (we are ahead or even)
   const isRed=diff>0;
   const color=isRed?'#A32D2D':'#3B6D11';
   const bgColor=isRed?'#FCEBEB':'#EAF3DE';
@@ -437,7 +461,7 @@ function renderExchangeBar(yb){
     <div style="font-size:13px;color:var(--text-secondary)">Our clicks for them: <strong style="color:var(--text-primary)">${yomClicks?yomClicks.toLocaleString():'—'}</strong></div>
     <div style="display:flex;align-items:center;gap:6px;font-size:13px">
       <span style="color:var(--text-secondary)">Difference:</span>
-      <strong style="color:${color}">${diff!==0?(diff>0?'−':'+')+''+Math.abs(diff).toLocaleString():'0'}</strong>
+      <strong style="color:${color}">${diff!==0?(isRed?'−':'+')+Math.abs(diff).toLocaleString():'0'}</strong>
       <span style="font-size:11px;color:${color};background:${bgColor};padding:2px 7px;border-radius:10px">${label}</span>
     </div>
   </div>`;
