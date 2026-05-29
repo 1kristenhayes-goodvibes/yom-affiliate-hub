@@ -725,8 +725,15 @@ function filterCalendarEvents(v){
     el.style.opacity=!val||el.textContent.toLowerCase().includes(val)?'1':'0.15';
   });
 }
-function renderCalendar(){
-  document.getElementById('calMonthLabel').textContent=MONTHS[calMonth]+' '+calYear;  
+function filterCalendarEvents(v){
+  const val=v.toLowerCase();
+  document.querySelectorAll('.event-list-item').forEach(el=>{
+    el.style.display=el.textContent.toLowerCase().includes(val)?'':'none';
+  });
+  document.querySelectorAll('.cal-entry').forEach(el=>{
+    el.style.opacity=!val||el.textContent.toLowerCase().includes(val)?'1':'0.15';
+  });
+}
 function renderCalendar(){
   document.getElementById('calMonthLabel').textContent=MONTHS[calMonth]+' '+calYear;
   const first=new Date(calYear,calMonth,1).getDay();
