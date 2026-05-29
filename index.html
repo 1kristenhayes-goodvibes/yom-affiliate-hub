@@ -451,14 +451,42 @@ function buildFlags(){
 
   // Section 2: Cross-reference with Sheet 3 — upcoming launches for partners we owe
   const owedNames=owedPartners.map(([name])=>name.toLowerCase());
-  const upcomingOwed=reqRows.filter((r,i)=>{
-    if(i===0||!r[0])return false;
-    const rName=r[0].toLowerCase();
-    return owedNames.some(n=>{
-      const words=n.split(' ').filter(w=>w.length>3);
-      return words.some(w=>rName.includes(w));
-    });
+  const today=new Date();today.setHours(0,0,0,0);
+const upcomingOwed=reqRows.filter((r,i)=>{
+  if(i===0||!r[0])return false;
+  const rName=r[0].toLowerCase();
+  // Must match a partner we owe clicks to
+  const isOwed=owedNames.some(n=>{
+    const words=n.split(' ').filter(w=>w.length>3);
+    return words.some(w=>rName.includes(w));
   });
+  if(!isOwed)return false;
+  // Must have a future date — parse the dates field (col B)
+  const dateStr=String(r[1]||'');
+  if(!dateStr)return false;
+  // Try to extract a year and find any date component that's upcoming
+  const yearMatch=dateStr.match(/20\d\d/);
+  const year=yearMatch?parseInt(yearMatch[0]):new Date().getFullYear();
+  // Extract month names or numbers
+  const months={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+  const monthMatch=dateStr.toLowerCase().match(/(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/);
+  if(monthMatch){
+    const month=months[monthMatch[1]];
+    const dayMatch=dateStr.match(/\d+/);
+    const day=dayMatch?parseInt(dayMatch[0]):1;
+    const launchDate=new Date(year,month,day);
+    return launchDate>=today;
+  }
+  // Try numeric date formats like 6/8, 6/8-6/19
+  const numMatch=dateStr.match(/(\d{1,2})\/(\d{1,2})/);
+  if(numMatch){
+    const month=parseInt(numMatch[1])-1;
+    const day=parseInt(numMatch[2]);
+    const launchDate=new Date(year,month,day);
+    return launchDate>=today;
+  }
+  return true;
+});
 
   if(!owedPartners.length&&!upcomingOwed.length){
     flagsEl.innerHTML='<div class="empty-state"><i class="ti ti-check"></i><p>No flags right now.</p></div>';
