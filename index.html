@@ -573,9 +573,9 @@ function parsePartnerTab(raw){
     if(!c0&&c1.toLowerCase().includes('stats results')){y.their.title=c1;return;}
     if(!c0&&c7.toLowerCase().includes('stats results')){y.yom.title=c7;return;}
     if(c0.toLowerCase()==='program')return;
-    if(c0.toUpperCase()==='TOTALS')y.their.totals=[...row];
-    if(c6.toUpperCase()==='TOTALS')y.yom.totals=[...row];
-    if(c0.toUpperCase()==='TOTALS'||c6.toUpperCase()==='TOTALS')return;
+    if(c0.toUpperCase()==='TOTALS'||c0.toUpperCase()==='TOTAL')y.their.totals=[...row];
+if(c6.toUpperCase()==='TOTALS'||c6.toUpperCase()==='TOTAL')y.yom.totals=[...row];
+if(c0.toUpperCase()==='TOTALS'||c0.toUpperCase()==='TOTAL'||c6.toUpperCase()==='TOTALS'||c6.toUpperCase()==='TOTAL')return;
     if(c0&&c0.toLowerCase()!=='program'&&c0.toUpperCase()!=='TOTALS'){
       y.their.rows.push({program:row[0],clicks:row[1],uLeads:row[2],rawLeads:row[3],commission:row[4]});
     }
