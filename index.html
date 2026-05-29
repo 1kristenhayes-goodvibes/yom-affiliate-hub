@@ -446,8 +446,8 @@ function buildFlags(){
 
   // Section 1: Traffic owed — Top Partners where we owe clicks in 2026
   const owedPartners=Object.entries(clickExchangeData)
-    .filter(([,d])=>d.diff2026>0) // negative = their clicks > our clicks = we owe them
-    .sort((a,b)=>a[1].diff2026-b[1].diff2026); // most owed first
+    .filter(([,d])=>d.diff2026>0)
+    .sort((a,b)=>b[1].diff2026-a[1].diff2026); // most owed first
 
   // Section 2: Cross-reference with Sheet 3 — upcoming launches for partners we owe
   const owedNames=owedPartners.map(([name])=>name.toLowerCase());
