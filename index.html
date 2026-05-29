@@ -319,7 +319,7 @@ async function syncAllSheets(){
       syncCalendar()
     ]);
     const ptabs=sheetData.partnerTabs||[];
-    const results=await Promise.allSettled(ptabs.slice(0,45).map(tab=>sheetValues(SID.outboundA,`'${tab}'!A1:L60`)));
+    const results=await Promise.allSettled(ptabs.slice(0,45).map(tab=>sheetValues(SID.outboundA,`'${tab}'!A1:K60`)));
     sheetData.partnerStats={};
     results.forEach((r,i)=>{if(r.status==='fulfilled')sheetData.partnerStats[ptabs[i]]=r.value;});
     setSS('on','Synced · '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}));
@@ -376,22 +376,23 @@ function numVal(v){
 }
 
 function parsePartnerTab(raw){
-  // Sheet layout per Debra's tab:
-  // Row 1: Partner name in A
-  // Row 2: Year (e.g. "2026") in A
-  // Row 3: empty A, "Debra Stats Results for us" in B | empty G, "Marci Stats Results for Debra" in H
-  // Row 4: "Program" in A (their headers) | "Program" in G (yom headers)
-  // Row 5+: data in cols A-E (their) | data in cols G-K (yom)
-  // Row 10: "TOTALS" in A | "TOTALS" in G
+  // Layout per screenshot:
+  // Row 1: Partner name in col A
+  // Row 2: Year (e.g. 2026) in col A, everything else empty
+  // Row 3: empty A, "X Stats Results for us" in col B (merged B-E), "Y Stats Results for X" in col H (merged H-K)
+  // Row 4: "Program" in col A, col B=Clicks, col C=Unique Leads, col D=Raw Leads, col E=Commission
+  //         "Program" in col G, col H=Clicks, col I=Unique Leads, col J=Raw Leads, col K=Commission
+  // Row 5+: data rows — their data in cols A-E, yom data in cols G-K on same rows
+  // Row 10: "TOTALS" in col A (their), "TOTALS" in col G (yom)
   const yearMap={};let curYear='';
   raw.forEach(row=>{
     if(!row||row.every(c=>!String(c||'').trim()))return;
     const c0=String(row[0]||'').trim();
     const c1=String(row[1]||'').trim();
-    const c7=String(row[7]||'').trim(); // H column = index 7
-    const c6=String(row[6]||'').trim(); // G column = index 6
+    const c6=String(row[6]||'').trim();
+    const c7=String(row[7]||'').trim();
 
-    // Year row: col A is 4-digit year
+    // Year row: col A = 4-digit year, col B empty
     if(/^20\d\d$/.test(c0)&&!c1){
       curYear=c0;
       if(!yearMap[curYear])yearMap[curYear]={year:curYear,their:{title:'',rows:[],totals:null},yom:{title:'',rows:[],totals:null}};
@@ -400,24 +401,39 @@ function parsePartnerTab(raw){
     if(!curYear)return;
     const y=yearMap[curYear];
 
-    // Section headers: col B has "Stats Results" = their section; col H has "Stats Results" = yom section
+    // Section headers: col B has "Stats Results" = their section
     if(!c0&&c1.toLowerCase().includes('stats results')){y.their.title=c1;return;}
+    // Section headers: col H (index 7) has "Stats Results" = yom section
     if(!c0&&c7.toLowerCase().includes('stats results')){y.yom.title=c7;return;}
 
-    // Skip column header rows (Program in col A or col G)
+    // Skip column header rows where col A = "Program"
     if(c0.toLowerCase()==='program')return;
 
     // TOTALS row: "TOTALS" in col A = their totals; "TOTALS" in col G = yom totals
-    if(c0.toUpperCase()==='TOTALS'){y.their.totals=[...row];}
-    if(c6.toUpperCase()==='TOTALS'){y.yom.totals=[...row];}
+    // Both appear on the same row (row 10 in screenshot)
+    if(c0.toUpperCase()==='TOTALS')y.their.totals=[...row];
+    if(c6.toUpperCase()==='TOTALS')y.yom.totals=[...row];
     if(c0.toUpperCase()==='TOTALS'||c6.toUpperCase()==='TOTALS')return;
 
-    // Data rows: their data in cols A(0)-E(4), yom data in cols G(6)-K(10)
-    if(c0){
-      y.their.rows.push({program:row[0],clicks:row[1],uLeads:row[2],rawLeads:row[3],commission:row[4]});
+    // Data rows: their data in cols A(0)-E(4) when col A has a program name
+    if(c0&&c0.toLowerCase()!=='program'&&c0.toUpperCase()!=='TOTALS'){
+      y.their.rows.push({
+        program:row[0],
+        clicks:row[1],
+        uLeads:row[2],
+        rawLeads:row[3],
+        commission:row[4]
+      });
     }
-    if(c6&&c6.toLowerCase()!=='program'){
-      y.yom.rows.push({program:row[6],clicks:row[7],uLeads:row[8],rawLeads:row[9],commission:row[10]});
+    // YOM data in cols G(6)-K(10) when col G has a program name
+    if(c6&&c6.toLowerCase()!=='program'&&c6.toUpperCase()!=='TOTALS'){
+      y.yom.rows.push({
+        program:row[6],
+        clicks:row[7],
+        uLeads:row[8],
+        rawLeads:row[9],
+        commission:row[10]
+      });
     }
   });
   return Object.values(yearMap).sort((a,b)=>b.year-a.year).slice(0,2);
@@ -434,7 +450,8 @@ function renderStatsTable(section,label,isYom){
   });
   if(section.totals){
     const t=section.totals;
-    // their totals: cols 0-4 (A-E); yom totals: cols 6-10 (G-K)
+    // their totals: cols A(0) label, B(1) clicks, C(2) uLeads, D(3) rawLeads, E(4) commission
+    // yom totals:   cols G(6) label, H(7) clicks, I(8) uLeads, J(9) rawLeads, K(10) commission
     const o=isYom?6:0;
     h+='<tr class="totals-row"><td>TOTALS</td><td>'+(t[o+1]||'—')+'</td><td>'+(t[o+2]||'—')+'</td><td>'+(t[o+3]||'—')+'</td><td>'+(t[o+4]||'—')+'</td></tr>';
   }
@@ -443,14 +460,14 @@ function renderStatsTable(section,label,isYom){
 }
 
 function renderExchangeBar(yb){
-  // Their total clicks: their totals row col 1 (B)
+  // Their total clicks from their TOTALS row col B (index 1)
   const theirClicks=numVal(yb.their.totals?.[1])||yb.their.rows.reduce((s,r)=>s+(numVal(r.clicks)||0),0);
-  // YOM total clicks: yom totals row col 7 (H)
+  // YOM total clicks from yom TOTALS row col H (index 7)
   const yomClicks=numVal(yb.yom.totals?.[7])||yb.yom.rows.reduce((s,r)=>s+(numVal(r.clicks)||0),0);
   if(!theirClicks&&!yomClicks)return'';
   const diff=theirClicks-yomClicks;
-  // Red = their clicks > our clicks (we owe them more clicks)
-  // Green = our clicks >= their clicks (we are ahead or even)
+  // Red = their clicks > our clicks (we owe them)
+  // Green = our clicks >= their clicks (we are ahead)
   const isRed=diff>0;
   const color=isRed?'#A32D2D':'#3B6D11';
   const bgColor=isRed?'#FCEBEB':'#EAF3DE';
