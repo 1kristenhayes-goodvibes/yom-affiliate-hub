@@ -132,7 +132,7 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
       <div class="sheets-item"><i class="ti ti-table"></i><div><div class="sheets-item-name">Sheet 1 — YOM26 Support</div><div class="sheets-item-role">Partner sales results for YOM</div></div></div>
       <div class="sheets-item"><i class="ti ti-table"></i><div><div class="sheets-item-name">Sheet 2 — Next launch onboarding</div><div class="sheets-item-role">Confirmed + declined partners</div></div></div>
       <div class="sheets-item"><i class="ti ti-table"></i><div><div class="sheets-item-name">Sheet 3 — Outbound requests</div><div class="sheets-item-role">Affiliate dates, confirmed, cookie</div></div></div>
-      <div class="sheets-item"><i class="ti ti-table"></i><div><div class="sheets-item-name">Sheet 4 — Outbound A (top partners)</div><div class="sheets-item-role">One tab per partner, launch stats</div></div></div>
+      <div class="sheets-item"><i class="ti ti-table"></i><div><div class="sheets-item-name">Sheet 4 — Top Partners (top partners)</div><div class="sheets-item-role">One tab per partner, launch stats</div></div></div>
       <div class="sheets-item"><i class="ti ti-table"></i><div><div class="sheets-item-name">Sheet 5 — Outbound B (internal)</div><div class="sheets-item-role">Clicks, opens, sends per mailing</div></div></div>
       <div class="sheets-item"><i class="ti ti-calendar"></i><div><div class="sheets-item-name">Affiliate Launch Mailings Calendar</div><div class="sheets-item-role">Google Calendar integration</div></div></div>
     </div>
@@ -143,7 +143,7 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
 
 <div id="tab-dashboard" style="display:none">
   <div class="metrics-grid">
-    <div class="metric-card"><div class="metric-label">Top partners</div><div class="metric-value" id="mTotal">—</div><div class="metric-sub">tabs in Outbound A</div></div>
+    <div class="metric-card"><div class="metric-label">Top partners</div><div class="metric-value" id="mTotal">—</div><div class="metric-sub">tabs in Top Partners</div></div>
     <div class="metric-card"><div class="metric-label">Confirmed this launch</div><div class="metric-value" id="mConfirmed">—</div><div class="metric-sub">onboarding sheet</div></div>
     <div class="metric-card"><div class="metric-label">Upcoming mailings</div><div class="metric-value" id="mMailings">—</div><div class="metric-sub">from calendar</div></div>
     <div class="metric-card"><div class="metric-label">Pending outbound</div><div class="metric-value" id="mPendingOut">—</div><div class="metric-sub">not yet confirmed</div></div>
@@ -165,14 +165,14 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
     <a class="sheet-link" href="https://docs.google.com/spreadsheets/d/1sxKb8SDHZ7zujcbgzVhIsd2tRmgqIDqok2pIPN7YpsM" target="_blank"><i class="ti ti-external-link" style="font-size:11px"></i> YOM26 Support</a>
     <a class="sheet-link" href="https://docs.google.com/spreadsheets/d/1at8pZ-JMuWqR5uE8KF_3RgvUTC7FH7Fd81pBN0MwtJw" target="_blank"><i class="ti ti-external-link" style="font-size:11px"></i> Onboarding</a>
     <a class="sheet-link" href="https://docs.google.com/spreadsheets/d/1HAXUIe3dFxmJe0gewq9BTlfgmhrbugNrKEllKnaaH4w" target="_blank"><i class="ti ti-external-link" style="font-size:11px"></i> Requests</a>
-    <a class="sheet-link" href="https://docs.google.com/spreadsheets/d/1zSEcdcCM-_xv7Qcd-BcRRh0t_cGP7RooY-IWRQqmz8U" target="_blank"><i class="ti ti-external-link" style="font-size:11px"></i> Outbound A</a>
+    <a class="sheet-link" href="https://docs.google.com/spreadsheets/d/1zSEcdcCM-_xv7Qcd-BcRRh0t_cGP7RooY-IWRQqmz8U" target="_blank"><i class="ti ti-external-link" style="font-size:11px"></i> Top Partners</a>
     <a class="sheet-link" href="https://docs.google.com/spreadsheets/d/1LH8gAOqsaS6H84MAqyf_wSh2RLgb_7uhvL7-4SPkvKw" target="_blank"><i class="ti ti-external-link" style="font-size:11px"></i> Outbound B</a>
   </div>
 </div>
 
 <div id="tab-partners" style="display:none">
   <div class="section-hdr"><div class="section-title">JV partner profiles</div><div class="section-actions"><button class="btn" onclick="syncAllSheets()"><i class="ti ti-refresh"></i> Sync</button></div></div>
-  <div class="alert alert-info"><i class="ti ti-info-circle"></i> Stats from Outbound A (one tab per partner) + Sheet 1 YOM26 results + Sheet 5 internal data. Click any partner to expand.</div>
+  <div class="alert alert-info"><i class="ti ti-info-circle"></i> Stats from Top Partners (one tab per partner) + Sheet 1 YOM26 results + Sheet 5 internal data. Click any partner to expand.</div>
   <div class="filter-bar"><input type="text" placeholder="Search partners..." oninput="filterPartnerProfiles(this.value)"></div>
   <div id="partnerProfiles"><div class="empty-state"><i class="ti ti-refresh"></i><p>Sync your sheets to load partner profiles.</p></div></div>
 </div>
