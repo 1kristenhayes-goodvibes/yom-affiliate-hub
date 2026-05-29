@@ -505,11 +505,11 @@ const upcomingOwed=reqRows.filter((r,i)=>{
         <div>Partner</div><div style="text-align:right">2026 diff</div><div style="text-align:right">2025 diff</div>
       </div>`;
     owedPartners.forEach(([name,d])=>{
-      const d26=d.diff2026?d.diff2026.toLocaleString():'—';
-      const d25=d.diff2025?d.diff2025.toLocaleString():'—';
-      const c25=d.diff2025&&d.diff2025<0?'color:#A32D2D':'color:var(--text-secondary)';
-      html+=`<div style="display:grid;grid-template-columns:1fr 90px 90px;padding:8px 10px;border-bottom:0.5px solid var(--border);align-items:center;font-size:13px">
-        <div style="font-weight:500">${name}</div>
+    const d26=d.diff2026?'+'+d.diff2026.toLocaleString():'—';
+    const d25=d.diff2025>0?'+'+d.diff2025.toLocaleString():d.diff2025<0?Math.abs(d.diff2025).toLocaleString():'—';
+    const c25=d.diff2025>0?'color:#A32D2D':d.diff2025<0?'color:#3B6D11':'color:var(--text-secondary)';
+    html+=`<div style="display:grid;grid-template-columns:1fr 90px 90px;padding:8px 10px;border-bottom:0.5px solid var(--border);align-items:center;font-size:13px">
+      <div style="font-weight:500">${name}</div>
         <div style="text-align:right;font-weight:500;color:#A32D2D">${d.diff2026<0?'−'+Math.abs(d.diff2026).toLocaleString():d26}</div>
         <div style="text-align:right;font-weight:500;${c25}">${d.diff2025&&d.diff2025<0?'−'+Math.abs(d.diff2025).toLocaleString():d25}</div>
       </div>`;
