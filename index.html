@@ -124,11 +124,6 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
 .event-dot{width:8px;height:8px;border-radius:50%;background:#5b3fc4;flex-shrink:0;}
 .event-date-label{font-size:12px;font-weight:500;min-width:70px;color:var(--text-secondary);}
 .flag-section-header{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;padding:5px 10px;border-radius:6px;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
-.flag-table{width:100%;border-collapse:collapse;font-size:12px;}
-.flag-table th{font-size:10px;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);padding:6px 10px;text-align:left;border-bottom:0.5px solid var(--border);background:var(--bg-secondary);}
-.flag-table td{padding:8px 10px;border-bottom:0.5px solid var(--border);vertical-align:middle;}
-.flag-table tr:last-child td{border-bottom:none;}
-.flag-table tr:hover td{background:var(--bg-secondary);}
 </style>
 </head>
 <body>
@@ -171,7 +166,6 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
   </div>
 </div>
 
-<!-- DASHBOARD -->
 <div id="tab-dashboard" style="display:none">
   <div class="metrics-grid">
     <div class="metric-card"><div class="metric-label">Confirmed for YOM27</div><div class="metric-value" id="mConfirmed">—</div><div class="metric-sub">onboarding sheet</div></div>
@@ -198,7 +192,6 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
   </div>
 </div>
 
-<!-- JV PARTNERS -->
 <div id="tab-partners" style="display:none">
   <div class="section-hdr"><div class="section-title">JV partner profiles</div><div class="section-actions"><button class="btn" onclick="syncAllSheets()"><i class="ti ti-refresh"></i> Sync</button></div></div>
   <div class="alert alert-info"><i class="ti ti-info-circle"></i> Stats from Top Partners (one tab per partner) + Sheet 1 YOM26 results + Sheet 5 internal data. Click any partner to expand.</div>
@@ -206,7 +199,6 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
   <div id="partnerProfiles"><div class="empty-state"><i class="ti ti-refresh"></i><p>Sync your sheets to load partner profiles.</p></div></div>
 </div>
 
-<!-- YOM26 SUPPORT -->
 <div id="tab-inbound" style="display:none">
   <div class="section-hdr"><div class="section-title">YOM26 Support — Sheet 1</div><div class="section-actions"><button class="btn" onclick="syncAllSheets()"><i class="ti ti-refresh"></i> Sync</button></div></div>
   <div class="filter-bar"><input type="text" placeholder="Search partners..." oninput="filterTable('inboundTbody',this.value,0)"></div>
@@ -216,7 +208,6 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
   </table></div></div>
 </div>
 
-<!-- OUTBOUND REQUESTS -->
 <div id="tab-outbound" style="display:none">
   <div class="section-hdr"><div class="section-title">Outbound requests — Sheet 3</div><div class="section-actions"><button class="btn" onclick="syncAllSheets()"><i class="ti ti-refresh"></i> Sync</button></div></div>
   <div class="filter-bar">
@@ -229,7 +220,6 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
   </table></div></div>
 </div>
 
-<!-- ONBOARDING -->
 <div id="tab-onboarding" style="display:none">
   <div class="section-hdr"><div class="section-title">Launch onboarding — Sheet 2</div><div class="section-actions"><button class="btn" onclick="syncAllSheets()"><i class="ti ti-refresh"></i> Sync</button></div></div>
   <div class="filter-bar">
@@ -250,12 +240,11 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
   </div>
 </div>
 
-<!-- CALENDAR -->
 <div id="tab-calendar" style="display:none">
- <div class="filter-bar" style="margin-bottom:1rem">
-  <input type="text" placeholder="Search calendar events..." oninput="filterCalendarEvents(this.value)" id="calSearch">
-</div>
-<div class="month-nav">
+  <div class="filter-bar" style="margin-bottom:1rem">
+    <input type="text" placeholder="Search calendar events..." oninput="filterCalendarEvents(this.value)" id="calSearch">
+  </div>
+  <div class="month-nav">
     <button class="btn" onclick="prevMonth()"><i class="ti ti-chevron-left"></i></button>
     <div class="month-label" id="calMonthLabel"></div>
     <button class="btn" onclick="nextMonth()"><i class="ti ti-chevron-right"></i></button>
@@ -346,34 +335,34 @@ async function syncAllSheets(){
   setSS('busy','Syncing...');
   try{
     sheetData.inbound=await firstTabValues(SID.inbound,'A1:AH500');
-await new Promise(r=>setTimeout(r,500));
-try{
-  const lbTabs=await sheetTabs(SID.inbound);
-  const lbTab=lbTabs.find(t=>t.toLowerCase().includes('final affiliate')||t.toLowerCase().includes('stats'));
-  if(lbTab)sheetData.leaderboard=await sheetValues(SID.inbound,`'${lbTab}'!A1:B200`);
-}catch(e){console.warn('Leaderboard tab not found:',e);}
-await new Promise(r=>setTimeout(r,500));
-sheetData.requests=await firstTabValues(SID.requests,'A1:J500');
-await new Promise(r=>setTimeout(r,500));
-sheetData.outboundB=await firstTabValues(SID.outboundB,'A1:W500');
-await new Promise(r=>setTimeout(r,500));
-sheetData.confirmed=await sheetValues(SID.onboarding,'A6:R26');
-await new Promise(r=>setTimeout(r,500));
-sheetData.declined=await sheetValues(SID.onboarding,'A27:R200');
-await new Promise(r=>setTimeout(r,500));
-const allTabs=await sheetTabs(SID.outboundA);
-sheetData.partnerTabs=allTabs.filter(x=>x&&!SKIP_TABS.includes(x)&&!/^sheet\d/i.test(x));
-await new Promise(r=>setTimeout(r,500));
-await syncCalendar();
+    await new Promise(r=>setTimeout(r,500));
+    try{
+      const lbTabs=await sheetTabs(SID.inbound);
+      const lbTab=lbTabs.find(t=>t.toLowerCase().includes('final affiliate')||t.toLowerCase().includes('2026 - final'));
+      if(lbTab)sheetData.leaderboard=await sheetValues(SID.inbound,`'${lbTab}'!A1:B200`);
+    }catch(e){console.warn('Leaderboard tab not found:',e);}
+    await new Promise(r=>setTimeout(r,500));
+    sheetData.requests=await firstTabValues(SID.requests,'A1:J500');
+    await new Promise(r=>setTimeout(r,500));
+    sheetData.outboundB=await firstTabValues(SID.outboundB,'A1:W500');
+    await new Promise(r=>setTimeout(r,500));
+    sheetData.confirmed=await sheetValues(SID.onboarding,'A6:R26');
+    await new Promise(r=>setTimeout(r,500));
+    sheetData.declined=await sheetValues(SID.onboarding,'A27:R200');
+    await new Promise(r=>setTimeout(r,500));
+    const allTabs=await sheetTabs(SID.outboundA);
+    sheetData.partnerTabs=allTabs.filter(x=>x&&!SKIP_TABS.includes(x)&&!/^sheet\d/i.test(x));
+    await new Promise(r=>setTimeout(r,500));
+    await syncCalendar();
     const ptabs=sheetData.partnerTabs||[];
     const results=[];
-const batchSize=5;
-for(let i=0;i<Math.min(ptabs.length,45);i+=batchSize){
-  const batch=ptabs.slice(i,i+batchSize);
-  const batchResults=await Promise.allSettled(batch.map(tab=>sheetValues(SID.outboundA,`'${tab}'!A1:K60`)));
-  results.push(...batchResults);
-  if(i+batchSize<Math.min(ptabs.length,45))await new Promise(r=>setTimeout(r,1200));
-}
+    const batchSize=5;
+    for(let i=0;i<Math.min(ptabs.length,45);i+=batchSize){
+      const batch=ptabs.slice(i,i+batchSize);
+      const batchResults=await Promise.allSettled(batch.map(tab=>sheetValues(SID.outboundA,`'${tab}'!A1:K60`)));
+      results.push(...batchResults);
+      if(i+batchSize<Math.min(ptabs.length,45))await new Promise(r=>setTimeout(r,2500));
+    }
     sheetData.partnerStats={};
     results.forEach((r,i)=>{if(r.status==='fulfilled')sheetData.partnerStats[ptabs[i]]=r.value;});
     setSS('on','Synced · '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}));
@@ -403,43 +392,28 @@ async function syncCalendar(){
 
 function refreshAll(){refreshPartners();refreshDash();refreshInbound();refreshOutbound();refreshOnboarding();renderCalendar();}
 
-// ── LEADERBOARD LOOKUP ────────────────────────────────────
 function getLeaderboardRank(partnerName){
   const rows=sheetData.leaderboard||[];
   if(!partnerName)return null;
   const pLower=partnerName.toLowerCase();
-  const match=rows.find((r,i)=>i>0&&r[1]&&r[1].toLowerCase().includes(pLower.split(' ')[0])&&r[1].toLowerCase().includes(pLower.split(' ').pop()));
-  if(!match){
-    // Try looser match on any word
-    const words=pLower.split(' ').filter(w=>w.length>3);
-    const loose=rows.find((r,i)=>i>0&&r[1]&&words.some(w=>r[1].toLowerCase().includes(w)));
-    return loose?loose[0]:null;
-  }
-  return match[0];
+  const words=pLower.split(' ').filter(w=>w.length>3);
+  const match=rows.find((r,i)=>i>0&&r[1]&&words.some(w=>r[1].toLowerCase().includes(w)));
+  return match?match[0]:null;
 }
 
-// ── CLICK EXCHANGE DATA (computed during partner refresh) ──
-let clickExchangeData={}; // {tabName: {their2026, yom2026, diff2026, their2025, yom2025, diff2025}}
-
+let clickExchangeData={};
 function numVal(v){if(!v)return null;const n=parseFloat(String(v).replace(/[$,]/g,''));return isNaN(n)?null:n;}
 
-// ── DASHBOARD ─────────────────────────────────────────────
 function refreshDash(){
   const conf=(sheetData.confirmed||[]).filter(r=>r[1]).length;
   document.getElementById('mConfirmed').textContent=conf||'—';
-
-  // Upcoming mailings — exclude any with "YOM" in title
   const now=new Date();
   const upcoming=calEvents.filter(e=>new Date(e.date+'T00:00:00')>=now&&!e.title.toUpperCase().includes('YOM'));
   document.getElementById('mMailings').textContent=upcoming.length||'—';
-
-  // Upcoming calendar events (also exclude YOM)
   const next=upcoming.slice(0,8);
   document.getElementById('dashUpcoming').innerHTML=next.length
     ?next.map(e=>{const d=new Date(e.date+'T00:00:00');return'<div class="mail-item"><div class="mail-date">'+(d.getMonth()+1)+'/'+d.getDate()+'</div><div class="mail-info"><div class="pname">'+e.title+'</div></div></div>';}).join('')
     :'<div class="empty-state"><i class="ti ti-calendar"></i><p>No upcoming events.</p></div>';
-
-  // Flags — build after partner data is available
   buildFlags();
 }
 
@@ -447,82 +421,75 @@ function buildFlags(){
   const flagsEl=document.getElementById('dashFlags');
   const reqRows=sheetData.requests||[];
 
-  // Section 1: Traffic owed — Top Partners where we owe clicks in 2026
+  // Partners where their clicks for us > our clicks for them = we owe them
+  // diff = their - yom, so diff > 0 means we owe them
   const owedPartners=Object.entries(clickExchangeData)
     .filter(([,d])=>d.diff2026>0)
-    .sort((a,b)=>b[1].diff2026-a[1].diff2026); // most owed first
+    .sort((a,b)=>b[1].diff2026-a[1].diff2026);
 
-  // Section 2: Cross-reference with Sheet 3 — upcoming launches for partners we owe
-  const owedNames=owedPartners.map(([name])=>name.toLowerCase());
-  const today=new Date();today.setHours(0,0,0,0);
-const upcomingOwed=reqRows.filter((r,i)=>{
-  if(i===0||!r[0])return false;
-  const rName=r[0].toLowerCase();
-  // Must match a partner we owe clicks to
-  const isOwed=owedNames.some(n=>{
-    const words=n.split(' ').filter(w=>w.length>3);
-    return words.some(w=>rName.includes(w));
-  });
-  if(!isOwed)return false;
-  // Must have a future date — parse the dates field (col B)
-  const dateStr=String(r[1]||'');
-  if(!dateStr)return false;
-  // Try to extract a year and find any date component that's upcoming
-  const yearMatch=dateStr.match(/20\d\d/);
-  const year=yearMatch?parseInt(yearMatch[0]):new Date().getFullYear();
-  // Extract month names or numbers
-  const months={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
-  const monthMatch=dateStr.toLowerCase().match(/(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/);
-  if(monthMatch){
-    const month=months[monthMatch[1]];
-    const dayMatch=dateStr.match(/\d+/);
-    const day=dayMatch?parseInt(dayMatch[0]):1;
-    const launchDate=new Date(year,month,day);
-    return launchDate>=today;
-  }
-  // Try numeric date formats like 6/8, 6/8-6/19
-  const numMatch=dateStr.match(/(\d{1,2})\/(\d{1,2})/);
-  if(numMatch){
-    const month=parseInt(numMatch[1])-1;
-    const day=parseInt(numMatch[2]);
-    const launchDate=new Date(year,month,day);
-    return launchDate>=today;
-  }
-  return true;
-});
-
-  if(!owedPartners.length&&!upcomingOwed.length){
+  if(!owedPartners.length){
     flagsEl.innerHTML='<div class="empty-state"><i class="ti ti-check"></i><p>No flags right now.</p></div>';
     return;
   }
 
-  let html='';
+  const owedNames=owedPartners.map(([name])=>name.toLowerCase());
 
-  if(owedPartners.length){
-    html+=`<div class="flag-section-header" style="color:#791F1F;background:#FCEBEB">
-      <i class="ti ti-arrow-up-right" style="font-size:13px" aria-hidden="true"></i>
-      Traffic may be owed — ${owedPartners.length} partner${owedPartners.length>1?'s':''}
-    </div>
-    <div style="border:0.5px solid var(--border);border-radius:var(--radius-md);overflow:hidden;margin-bottom:1rem">
-      <div style="display:grid;grid-template-columns:1fr 90px 90px;font-size:10px;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);padding:6px 10px;background:var(--bg-secondary);border-bottom:0.5px solid var(--border)">
-        <div>Partner</div><div style="text-align:right">2026 diff</div><div style="text-align:right">2025 diff</div>
-      </div>`;
-    owedPartners.forEach(([name,d])=>{
-    const d26=d.diff2026?'−'+d.diff2026.toLocaleString():'—';
-const d25=d.diff2025>0?'−'+Math.abs(d.diff2025).toLocaleString():d.diff2025<0?'+'+Math.abs(d.diff2025).toLocaleString():'—';
-    const c25=d.diff2025>0?'color:#A32D2D':d.diff2025<0?'color:#3B6D11':'color:var(--text-secondary)';
-    html+=`<div style="display:grid;grid-template-columns:1fr 90px 90px;padding:8px 10px;border-bottom:0.5px solid var(--border);align-items:center;font-size:13px">
-      <div style="font-weight:500">${name}</div>
-        <div style="text-align:right;font-weight:500;color:#A32D2D">${d.diff2026<0?'−'+Math.abs(d.diff2026).toLocaleString():d26}</div>
-        <div style="text-align:right;font-weight:500;${c25}">${d.diff2025&&d.diff2025<0?'−'+Math.abs(d.diff2025).toLocaleString():d25}</div>
-      </div>`;
-    });
-    html+='</div>';
+  function nameMatches(rowName,owedName){
+    const words=owedName.split(' ').filter(w=>w.length>3);
+    return words.some(w=>rowName.toLowerCase().includes(w));
   }
 
+  // Upcoming launches from Sheet 3 that match owed partners and have future dates
+  const today=new Date();today.setHours(0,0,0,0);
+  const upcomingOwed=reqRows.filter((r,i)=>{
+    if(i===0||!r[0])return false;
+    const isOwed=owedNames.some(n=>nameMatches(r[0],n));
+    if(!isOwed)return false;
+    const dateStr=String(r[1]||'');
+    if(!dateStr)return false;
+    const year=parseInt((dateStr.match(/20\d\d/)||[])[0]||new Date().getFullYear());
+    const mnames={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+    const mname=dateStr.toLowerCase().match(/(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/);
+    if(mname){
+      const day=parseInt((dateStr.match(/\d+/)||[1])[0]);
+      return new Date(year,mnames[mname[1]],day)>=today;
+    }
+    const num=dateStr.match(/(\d{1,2})\/(\d{1,2})/);
+    if(num)return new Date(year,parseInt(num[1])-1,parseInt(num[2]))>=today;
+    return false;
+  });
+
+  let html='';
+
+  // Section 1: Traffic owed table
+  html+=`<div class="flag-section-header" style="color:#791F1F;background:#FCEBEB">
+    <i class="ti ti-arrow-up-right" style="font-size:13px"></i>
+    Traffic may be owed — ${owedPartners.length} partner${owedPartners.length>1?'s':''}
+  </div>
+  <div style="border:0.5px solid var(--border);border-radius:var(--radius-md);overflow:hidden;margin-bottom:1rem">
+    <div style="display:grid;grid-template-columns:1fr 90px 90px;font-size:10px;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);padding:6px 10px;background:var(--bg-secondary);border-bottom:0.5px solid var(--border)">
+      <div>Partner</div><div style="text-align:right">2026 diff</div><div style="text-align:right">2025 diff</div>
+    </div>`;
+
+  owedPartners.forEach(([name,d])=>{
+    // 2026: diff > 0 = we owe them = show as negative (red)
+    const d26='−'+d.diff2026.toLocaleString();
+    // 2025: diff > 0 = we owed them = red/negative display
+    //       diff < 0 = we were ahead = green/positive display
+    const d25=d.diff2025===0?'—':d.diff2025>0?'−'+Math.abs(d.diff2025).toLocaleString():'+'+Math.abs(d.diff2025).toLocaleString();
+    const c25=d.diff2025>0?'#A32D2D':d.diff2025<0?'#3B6D11':'var(--text-secondary)';
+    html+=`<div style="display:grid;grid-template-columns:1fr 90px 90px;padding:8px 10px;border-bottom:0.5px solid var(--border);align-items:center;font-size:13px">
+      <div style="font-weight:500">${name}</div>
+      <div style="text-align:right;font-weight:500;color:#A32D2D">${d26}</div>
+      <div style="text-align:right;font-weight:500;color:${c25}">${d25}</div>
+    </div>`;
+  });
+  html+='</div>';
+
+  // Section 2: Upcoming launches for owed partners
   if(upcomingOwed.length){
     html+=`<div class="flag-section-header" style="color:#854F0B;background:#FAEEDA">
-      <i class="ti ti-calendar-event" style="font-size:13px" aria-hidden="true"></i>
+      <i class="ti ti-calendar-event" style="font-size:13px"></i>
       Upcoming launches — partners we owe clicks to
     </div>
     <div style="border:0.5px solid var(--border);border-radius:var(--radius-md);overflow:hidden;margin-bottom:8px">
@@ -530,13 +497,9 @@ const d25=d.diff2025>0?'−'+Math.abs(d.diff2025).toLocaleString():d.diff2025<0?
         <div>Partner</div><div>Dates</div><div style="text-align:right">2026 diff</div><div style="text-align:center">Confirmed?</div>
       </div>`;
     upcomingOwed.forEach(r=>{
-      const rNameLower=r[0].toLowerCase();
-      const matchedEntry=owedPartners.find(([name])=>{
-        const words=name.toLowerCase().split(' ').filter(w=>w.length>3);
-        return words.some(w=>rNameLower.includes(w));
-      });
-      const diff=matchedEntry?matchedEntry[1].diff2026:null;
-      const diffStr=diff&&diff<0?'−'+Math.abs(diff).toLocaleString():'—';
+      const match=owedPartners.find(([n])=>nameMatches(r[0],n));
+      const diff=match?match[1].diff2026:null;
+      const diffStr=diff?'−'+diff.toLocaleString():'—';
       const conf=(r[2]||'').toLowerCase();
       const confBadge=conf.includes('yes')
         ?'<span style="font-size:11px;background:var(--green-bg);color:var(--green-text);padding:2px 8px;border-radius:10px;font-weight:500">Yes</span>'
@@ -550,14 +513,12 @@ const d25=d.diff2025>0?'−'+Math.abs(d.diff2025).toLocaleString():d.diff2025<0?
         <div style="text-align:center">${confBadge}</div>
       </div>`;
     });
-    html+='</div>';
-    html+='<div style="font-size:11px;color:var(--text-secondary);padding:0 2px">Dates and confirmation from Sheet 3 · Top Partners with 2026 click deficit only</div>';
+    html+='</div><div style="font-size:11px;color:var(--text-secondary);padding:0 2px">Upcoming dates only · confirmation from Sheet 3</div>';
   }
 
   flagsEl.innerHTML=html;
 }
 
-// ── PARTNER PROFILES ──────────────────────────────────────
 function parsePartnerTab(raw){
   const yearMap={};let curYear='';
   raw.forEach(row=>{
@@ -577,12 +538,12 @@ function parsePartnerTab(raw){
     if(!c0&&c7.toLowerCase().includes('stats results')){y.yom.title=c7;return;}
     if(c0.toLowerCase()==='program')return;
     if(c0.toUpperCase()==='TOTALS'||c0.toUpperCase()==='TOTAL')y.their.totals=[...row];
-if(c6.toUpperCase()==='TOTALS'||c6.toUpperCase()==='TOTAL')y.yom.totals=[...row];
-if(c0.toUpperCase()==='TOTALS'||c0.toUpperCase()==='TOTAL'||c6.toUpperCase()==='TOTALS'||c6.toUpperCase()==='TOTAL')return;
-    if(c0&&c0.toLowerCase()!=='program'&&c0.toUpperCase()!=='TOTALS'){
+    if(c6.toUpperCase()==='TOTALS'||c6.toUpperCase()==='TOTAL')y.yom.totals=[...row];
+    if(c0.toUpperCase()==='TOTALS'||c0.toUpperCase()==='TOTAL'||c6.toUpperCase()==='TOTALS'||c6.toUpperCase()==='TOTAL')return;
+    if(c0&&c0.toLowerCase()!=='program'&&c0.toUpperCase()!=='TOTALS'&&c0.toUpperCase()!=='TOTAL'){
       y.their.rows.push({program:row[0],clicks:row[1],uLeads:row[2],rawLeads:row[3],commission:row[4]});
     }
-    if(c6&&c6.toLowerCase()!=='program'&&c6.toUpperCase()!=='TOTALS'){
+    if(c6&&c6.toLowerCase()!=='program'&&c6.toUpperCase()!=='TOTALS'&&c6.toUpperCase()!=='TOTAL'){
       y.yom.rows.push({program:row[6],clicks:row[7],uLeads:row[8],rawLeads:row[9],commission:row[10]});
     }
   });
@@ -630,7 +591,6 @@ function refreshPartners(){
   const inRows=sheetData.inbound||[];
   const bRows=sheetData.outboundB||[];
   clickExchangeData={};
-
   document.getElementById('partnerProfiles').innerHTML=ptabs.map(tab=>{
     const raw=sheetData.partnerStats?.[tab]||[];
     const yearBlocks=parsePartnerTab(raw);
@@ -641,18 +601,18 @@ function refreshPartners(){
     const yomEPC=inRow?inRow[25]:'—';
     const bMatch=bRows.filter(r=>r&&r[1]&&r[1].toLowerCase().includes(tabFirst));
     const pid='pp_'+tab.replace(/[^a-z0-9]/gi,'_');
-
-    // Compute click exchange for flags
     const exchData={their2026:0,yom2026:0,diff2026:0,their2025:0,yom2025:0,diff2025:0};
     yearBlocks.forEach(yb=>{
       const their=numVal(yb.their.totals?.[1])||yb.their.rows.reduce((s,r)=>s+(numVal(r.clicks)||0),0);
       const yom=numVal(yb.yom.totals?.[7])||yb.yom.rows.reduce((s,r)=>s+(numVal(r.clicks)||0),0);
       const diff=their-yom;
-      if(yb.year==='2026'||yb.year===String(new Date().getFullYear())){exchData.their2026=their;exchData.yom2026=yom;exchData.diff2026=diff;}
-      else{exchData.their2025=their;exchData.yom2025=yom;exchData.diff2025=diff;}
+      if(yb.year==='2026'||yb.year===String(new Date().getFullYear())){
+        exchData.their2026=their;exchData.yom2026=yom;exchData.diff2026=diff;
+      }else{
+        exchData.their2025=their;exchData.yom2025=yom;exchData.diff2025=diff;
+      }
     });
     clickExchangeData[tab]=exchData;
-
     const yearsHtml=yearBlocks.length?yearBlocks.map(yb=>`
       <div class="year-block">
         <div class="year-label">${yb.year}</div>
@@ -662,7 +622,6 @@ function refreshPartners(){
         </div>
         ${renderExchangeBar(yb)}
       </div>`).join(''):'<div style="font-size:12px;color:var(--text-secondary);padding:8px">No launch data found in this tab.</div>';
-
     return`<div class="partner-profile" id="${pid}">
       <div class="partner-profile-header" onclick="toggleProfile(this)">
         <div class="partner-profile-name"><i class="ti ti-chevron-right" style="font-size:14px;transition:transform 0.2s;color:#5b3fc4"></i>${tab}</div>
@@ -679,8 +638,6 @@ function refreshPartners(){
       </div>
     </div>`;
   }).join('');
-
-  // Rebuild flags now that click exchange data is ready
   buildFlags();
 }
 
@@ -697,7 +654,6 @@ function refreshOutbound(){
   document.getElementById('outboundTbody').innerHTML=rows.filter(r=>r&&r[0]&&r[0]!=='Affiliate').map(r=>{
     const cv=(r[2]||'').toLowerCase();const sc=cv.includes('yes')?'b-confirmed':cv.includes('no')?'b-declined':'b-pending';
     const ck=(r[8]||'').toLowerCase();const cc=ck.includes('1st')?'b-1st':ck.includes('last')?'b-last':ck.includes('rec')?'b-rec':'b-evgrn';
-    // Leaderboard rank lookup
     const rank=getLeaderboardRank(r[0]);
     const rankCell=rank?`<span style="font-size:12px;font-weight:600;color:#5b3fc4">#${rank}</span>`:'<span style="color:var(--text-secondary);font-size:12px">—</span>';
     return`<tr><td class="name-cell">${r[0]}</td><td>${r[1]||'—'}</td><td><span class="badge ${sc}">${r[2]||'—'}</span></td><td>${r[4]||'—'}</td><td>${rankCell}</td><td><span class="badge ${cc}">${r[8]||'—'}</span></td><td style="font-size:12px;color:var(--text-secondary)">${r[6]||''}</td></tr>`;
@@ -725,15 +681,7 @@ function filterCalendarEvents(v){
     el.style.opacity=!val||el.textContent.toLowerCase().includes(val)?'1':'0.15';
   });
 }
-function filterCalendarEvents(v){
-  const val=v.toLowerCase();
-  document.querySelectorAll('.event-list-item').forEach(el=>{
-    el.style.display=el.textContent.toLowerCase().includes(val)?'':'none';
-  });
-  document.querySelectorAll('.cal-entry').forEach(el=>{
-    el.style.opacity=!val||el.textContent.toLowerCase().includes(val)?'1':'0.15';
-  });
-}
+
 function renderCalendar(){
   document.getElementById('calMonthLabel').textContent=MONTHS[calMonth]+' '+calYear;
   const first=new Date(calYear,calMonth,1).getDay();
