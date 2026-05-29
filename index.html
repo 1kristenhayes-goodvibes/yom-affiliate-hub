@@ -68,9 +68,9 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
 .filter-bar{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap;align-items:center;}
 .filter-bar input,.filter-bar select{padding:7px 10px;border:0.5px solid var(--border-md);border-radius:var(--radius-md);font-size:13px;background:var(--bg-primary);color:var(--text-primary);font-family:'Inter',sans-serif;}
 .filter-bar input{flex:1;min-width:160px;}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;width:100%;}
 .cal-hdr{font-size:11px;text-align:center;padding:4px;color:var(--text-secondary);font-weight:500;}
-.cal-day{min-height:72px;background:var(--bg-primary);border:0.5px solid var(--border);border-radius:var(--radius-md);padding:4px 5px;}
+.cal-day{min-height:80px;background:var(--bg-primary);border:0.5px solid var(--border);border-radius:var(--radius-md);padding:4px 5px;overflow:hidden;min-width:0;}
 .cal-day.has-event{border-color:#5b3fc4;}
 .cal-num{font-size:11px;color:var(--text-secondary);margin-bottom:2px;}
 .cal-entry{font-size:9px;border-radius:4px;padding:1px 3px;margin-bottom:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:var(--blue-bg);color:var(--blue-text);}
@@ -252,7 +252,10 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
 
 <!-- CALENDAR -->
 <div id="tab-calendar" style="display:none">
-  <div class="month-nav">
+ <div class="filter-bar" style="margin-bottom:1rem">
+  <input type="text" placeholder="Search calendar events..." oninput="filterCalendarEvents(this.value)" id="calSearch">
+</div>
+<div class="month-nav">
     <button class="btn" onclick="prevMonth()"><i class="ti ti-chevron-left"></i></button>
     <div class="month-label" id="calMonthLabel"></div>
     <button class="btn" onclick="nextMonth()"><i class="ti ti-chevron-right"></i></button>
@@ -713,6 +716,17 @@ function refreshOnboarding(){
 function filterOnboarding(v){['confirmedTbody','declinedTbody'].forEach(id=>{document.querySelectorAll('#'+id+' tr').forEach(r=>{r.style.display=(r.cells[0]?.textContent||'').toLowerCase().includes(v.toLowerCase())?'':'none';});});}
 function filterOnboardingByStatus(v){document.getElementById('confirmedPanel').style.display=(v===''||v==='confirmed')?'':'none';document.getElementById('declinedPanel').style.display=(v===''||v==='declined')?'':'none';}
 
+function filterCalendarEvents(v){
+  const val=v.toLowerCase();
+  document.querySelectorAll('.event-list-item').forEach(el=>{
+    el.style.display=el.textContent.toLowerCase().includes(val)?'':'none';
+  });
+  document.querySelectorAll('.cal-entry').forEach(el=>{
+    el.style.opacity=!val||el.textContent.toLowerCase().includes(val)?'1':'0.15';
+  });
+}
+function renderCalendar(){
+  document.getElementById('calMonthLabel').textContent=MONTHS[calMonth]+' '+calYear;  
 function renderCalendar(){
   document.getElementById('calMonthLabel').textContent=MONTHS[calMonth]+' '+calYear;
   const first=new Date(calYear,calMonth,1).getDay();
