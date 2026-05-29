@@ -342,24 +342,26 @@ async function syncAllSheets(){
   if(!accessToken){handleAuthClick();return;}
   setSS('busy','Syncing...');
   try{
-    await Promise.all([
-      firstTabValues(SID.inbound,'A1:AH500').then(r=>sheetData.inbound=r),
-      // Also fetch leaderboard tab
-      sheetValues(SID.inbound,"YOM 2026 - Final Affiliate Stats!A1:B200").then(r=>sheetData.leaderboard=r).catch(()=>
-  sheetValues(SID.inbound,encodeURIComponent("'YOM 2026 - Final Affiliate Stats'")+"!A1:B200").then(r=>sheetData.leaderboard=r).catch(()=>
-    sheetTabs(SID.inbound).then(tabs=>{
-      const t=tabs.find(x=>x.toLowerCase().includes('final affiliate'));
-      if(t)return sheetValues(SID.inbound,`'${t}'!A1:B200`).then(r=>sheetData.leaderboard=r);
-    })
-  )
-),
-      firstTabValues(SID.requests,'A1:J500').then(r=>sheetData.requests=r),
-      firstTabValues(SID.outboundB,'A1:W500').then(r=>sheetData.outboundB=r),
-      sheetValues(SID.onboarding,'A6:R26').then(r=>sheetData.confirmed=r),
-      sheetValues(SID.onboarding,'A27:R200').then(r=>sheetData.declined=r),
-      sheetTabs(SID.outboundA).then(t=>{sheetData.partnerTabs=t.filter(x=>x&&!SKIP_TABS.includes(x)&&!/^sheet\d/i.test(x));}),
-      syncCalendar()
-    ]);
+    sheetData.inbound=await firstTabValues(SID.inbound,'A1:AH500');
+await new Promise(r=>setTimeout(r,500));
+try{
+  const lbTabs=await sheetTabs(SID.inbound);
+  const lbTab=lbTabs.find(t=>t.toLowerCase().includes('final affiliate')||t.toLowerCase().includes('stats'));
+  if(lbTab)sheetData.leaderboard=await sheetValues(SID.inbound,`'${lbTab}'!A1:B200`);
+}catch(e){console.warn('Leaderboard tab not found:',e);}
+await new Promise(r=>setTimeout(r,500));
+sheetData.requests=await firstTabValues(SID.requests,'A1:J500');
+await new Promise(r=>setTimeout(r,500));
+sheetData.outboundB=await firstTabValues(SID.outboundB,'A1:W500');
+await new Promise(r=>setTimeout(r,500));
+sheetData.confirmed=await sheetValues(SID.onboarding,'A6:R26');
+await new Promise(r=>setTimeout(r,500));
+sheetData.declined=await sheetValues(SID.onboarding,'A27:R200');
+await new Promise(r=>setTimeout(r,500));
+const allTabs=await sheetTabs(SID.outboundA);
+sheetData.partnerTabs=allTabs.filter(x=>x&&!SKIP_TABS.includes(x)&&!/^sheet\d/i.test(x));
+await new Promise(r=>setTimeout(r,500));
+await syncCalendar();
     const ptabs=sheetData.partnerTabs||[];
     const results=[];
 const batchSize=5;
