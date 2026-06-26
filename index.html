@@ -815,78 +815,90 @@ function refreshForecast(){
     .filter(e=>!e.title.toLowerCase().includes('podcast'))
     .sort((a,b)=>a.date.localeCompare(b.date));
 
-  // First pass: count scheduled mailings PER MONTH PER PARTNER (not total across all months)
-  const monthlyScheduledCount={}; // monthKey -> { tabName: count }
+  // Build full campaign per partner: total scheduled mailings + earliest date across ALL upcoming months
+  const campaigns={}; // tabName -> { count, earliestDate, events:[] }
   const matchedTabsOverall=new Set();
+  const unmatchedEvents=[]; // events with no partner match (internal, etc.)
 
   upcomingEvents.forEach(e=>{
     const matchedTab=findPartnerByFuzzyName(e.title);
     if(matchedTab){
       matchedTabsOverall.add(matchedTab);
-      const d=new Date(e.date+'T00:00:00');
-      const monthKey=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
-      if(!monthlyScheduledCount[monthKey])monthlyScheduledCount[monthKey]={};
-      monthlyScheduledCount[monthKey][matchedTab]=(monthlyScheduledCount[monthKey][matchedTab]||0)+1;
+      if(!campaigns[matchedTab]){
+        campaigns[matchedTab]={count:0,earliestDate:e.date,events:[]};
+      }
+      campaigns[matchedTab].count++;
+      campaigns[matchedTab].events.push(e);
+      if(e.date<campaigns[matchedTab].earliestDate)campaigns[matchedTab].earliestDate=e.date;
+    } else {
+      unmatchedEvents.push(e);
     }
   });
 
-  // Second pass: build the display rows, one row per partner per month (using that month's own count)
-  const monthGroups={};
+  // Group partner campaigns by the month of their EARLIEST mailing
+  const monthGroups={}; // monthKey -> {label, rows:[]}
 
-  upcomingEvents.forEach(e=>{
+  Object.entries(campaigns).forEach(([tab,camp])=>{
+    const d=new Date(camp.earliestDate+'T00:00:00');
+    const monthKey=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+    const monthLabel=MONTHS[d.getMonth()]+' '+d.getFullYear();
+    if(!monthGroups[monthKey])monthGroups[monthKey]={label:monthLabel,rows:[]};
+
+    const rank=getLeaderboardRank(tab);
+    const exch=clickExchangeData[tab];
+    const epcData=partnerEPC[tab];
+    const epc=epcData?epcData.epc:null;
+    const owed=exch&&exch.diff2026>0?exch.diff2026:0;
+    const mailingsNeededTotal=estimateMailingsNeeded(owed);
+
+    const estClicks=camp.count*500;
+    const estIncome=estimateIncome(estClicks,epc);
+
+    const repayLabel=owed>0?'Repay (owe '+owed.toLocaleString()+' clicks)':'Even / Ahead';
+    const incomeStr=estIncome?fmtMoney(estIncome.low)+' – '+fmtMoney(estIncome.high):'N/A';
+    const incomeSub=estIncome?'<span class="forecast-sub">EPC $'+epc.toFixed(2)+' × '+estClicks.toLocaleString()+' clicks, −15–20%</span>':'<span class="forecast-sub">No historical EPC data found (checked up to 4 years)</span>';
+
+    monthGroups[monthKey].rows.push({
+      sortDate:camp.earliestDate,
+      html:`<tr>
+        <td class="name-cell">${tab}</td>
+        <td>${rank?'#'+rank:'N/A'}</td>
+        <td>${camp.count} scheduled / ${mailingsNeededTotal||camp.count} needed total</td>
+        <td>${repayLabel}</td>
+        <td>${incomeStr}${incomeSub}</td>
+      </tr>`
+    });
+  });
+
+  // Unmatched events (internal launches, etc.) — grouped by their own month, one row each
+  unmatchedEvents.forEach(e=>{
     const d=new Date(e.date+'T00:00:00');
     const monthKey=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
     const monthLabel=MONTHS[d.getMonth()]+' '+d.getFullYear();
-    const matchedTab=findPartnerByFuzzyName(e.title);
-
-    if(!monthGroups[monthKey])monthGroups[monthKey]={label:monthLabel,rows:[],seen:new Set()};
-
-    if(matchedTab){
-      if(monthGroups[monthKey].seen.has(matchedTab))return; // one row per partner per month
-      monthGroups[monthKey].seen.add(matchedTab);
-
-      const scheduledThisMonth=monthlyScheduledCount[monthKey]?.[matchedTab]||1;
-      const rank=getLeaderboardRank(matchedTab);
-      const exch=clickExchangeData[matchedTab];
-      const epcData=partnerEPC[matchedTab];
-      const epc=epcData?epcData.epc:null;
-      const owed=exch&&exch.diff2026>0?exch.diff2026:0;
-      const mailingsNeededTotal=estimateMailingsNeeded(owed);
-
-      const estClicks=scheduledThisMonth*500;
-      const estIncome=estimateIncome(estClicks,epc);
-
-      const repayLabel=owed>0?'Repay (owe '+owed.toLocaleString()+' clicks)':'Even / Ahead';
-      const incomeStr=estIncome?fmtMoney(estIncome.low)+' – '+fmtMoney(estIncome.high):'N/A';
-      const incomeSub=estIncome?'<span class="forecast-sub">EPC $'+epc.toFixed(2)+' × '+estClicks.toLocaleString()+' clicks, −15–20%</span>':'<span class="forecast-sub">No historical EPC data found (checked up to 4 years)</span>';
-
-      monthGroups[monthKey].rows.push(`<tr>
-        <td class="name-cell">${matchedTab}</td>
-        <td>${rank?'#'+rank:'N/A'}</td>
-        <td>${scheduledThisMonth} scheduled this month / ${mailingsNeededTotal||scheduledThisMonth} needed total</td>
-        <td>${repayLabel}</td>
-        <td>${incomeStr}${incomeSub}</td>
-      </tr>`);
-    } else {
-      if(monthGroups[monthKey].seen.has(e.title))return;
-      monthGroups[monthKey].seen.add(e.title);
-      monthGroups[monthKey].rows.push(`<tr>
+    if(!monthGroups[monthKey])monthGroups[monthKey]={label:monthLabel,rows:[]};
+    // Avoid duplicate unmatched titles within the same month
+    const alreadyListed=monthGroups[monthKey].rows.some(r=>r.html.includes('>'+e.title+'<'));
+    if(alreadyListed)return;
+    monthGroups[monthKey].rows.push({
+      sortDate:e.date,
+      html:`<tr>
         <td class="name-cell">${e.title}</td>
         <td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td>
-      </tr>`);
-    }
+      </tr>`
+    });
   });
 
   let confirmedHtml='';
   Object.keys(monthGroups).sort().forEach(key=>{
     const g=monthGroups[key];
+    g.rows.sort((a,b)=>a.sortDate.localeCompare(b.sortDate));
     confirmedHtml+=`<tr class="forecast-month-header"><td colspan="5">${g.label}</td></tr>`;
-    confirmedHtml+=g.rows.join('');
+    confirmedHtml+=g.rows.map(r=>r.html).join('');
   });
 
   calBody.innerHTML=confirmedHtml||'<tr><td colspan="5"><div class="empty-state" style="padding:1.5rem"><i class="ti ti-calendar"></i><p>No upcoming calendar events found.</p></div></td></tr>';
 
-  // ── Section 2: Owed partners not yet on calendar ──
+  // ── Section 2: Owed partners not yet on calendar at all ──
   const owedEntries=Object.entries(clickExchangeData)
     .filter(([tab,d])=>d.diff2026>0&&!matchedTabsOverall.has(tab))
     .sort((a,b)=>b[1].diff2026-a[1].diff2026);
