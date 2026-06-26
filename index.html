@@ -815,10 +815,9 @@ function refreshForecast(){
     .filter(e=>!e.title.toLowerCase().includes('podcast'))
     .sort((a,b)=>a.date.localeCompare(b.date));
 
-  // Build full campaign per partner: total scheduled mailings + earliest date across ALL upcoming months
-  const campaigns={}; // tabName -> { count, earliestDate, events:[] }
+  const campaigns={};
   const matchedTabsOverall=new Set();
-  const unmatchedEvents=[]; // events with no partner match (internal, etc.)
+  const unmatchedEvents=[];
 
   upcomingEvents.forEach(e=>{
     const matchedTab=findPartnerByFuzzyName(e.title);
@@ -835,14 +834,13 @@ function refreshForecast(){
     }
   });
 
-  // Group partner campaigns by the month of their EARLIEST mailing
-  const monthGroups={}; // monthKey -> {label, rows:[]}
+  const monthGroups={};
 
   Object.entries(campaigns).forEach(([tab,camp])=>{
     const d=new Date(camp.earliestDate+'T00:00:00');
     const monthKey=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
     const monthLabel=MONTHS[d.getMonth()]+' '+d.getFullYear();
-    if(!monthGroups[monthKey])monthGroups[monthKey]={label:monthLabel,rows:[]};
+    if(!monthGroups[monthKey])monthGroups[monthKey]={label:monthLabel,rows:[],totalLow:0,totalHigh:0};
 
     const rank=getLeaderboardRank(tab);
     const exch=clickExchangeData[tab];
@@ -858,6 +856,11 @@ function refreshForecast(){
     const incomeStr=estIncome?fmtMoney(estIncome.low)+' – '+fmtMoney(estIncome.high):'N/A';
     const incomeSub=estIncome?'<span class="forecast-sub">EPC $'+epc.toFixed(2)+' × '+estClicks.toLocaleString()+' clicks, −15–20%</span>':'<span class="forecast-sub">No historical EPC data found (checked up to 4 years)</span>';
 
+    if(estIncome){
+      monthGroups[monthKey].totalLow+=estIncome.low;
+      monthGroups[monthKey].totalHigh+=estIncome.high;
+    }
+
     monthGroups[monthKey].rows.push({
       sortDate:camp.earliestDate,
       html:`<tr>
@@ -870,13 +873,11 @@ function refreshForecast(){
     });
   });
 
-  // Unmatched events (internal launches, etc.) — grouped by their own month, one row each
   unmatchedEvents.forEach(e=>{
     const d=new Date(e.date+'T00:00:00');
     const monthKey=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
     const monthLabel=MONTHS[d.getMonth()]+' '+d.getFullYear();
-    if(!monthGroups[monthKey])monthGroups[monthKey]={label:monthLabel,rows:[]};
-    // Avoid duplicate unmatched titles within the same month
+    if(!monthGroups[monthKey])monthGroups[monthKey]={label:monthLabel,rows:[],totalLow:0,totalHigh:0};
     const alreadyListed=monthGroups[monthKey].rows.some(r=>r.html.includes('>'+e.title+'<'));
     if(alreadyListed)return;
     monthGroups[monthKey].rows.push({
@@ -894,11 +895,16 @@ function refreshForecast(){
     g.rows.sort((a,b)=>a.sortDate.localeCompare(b.sortDate));
     confirmedHtml+=`<tr class="forecast-month-header"><td colspan="5">${g.label}</td></tr>`;
     confirmedHtml+=g.rows.map(r=>r.html).join('');
+    if(g.totalLow>0||g.totalHigh>0){
+      confirmedHtml+=`<tr style="background:var(--bg-secondary);font-weight:600">
+        <td colspan="4" style="text-align:right;padding-right:16px">Monthly total estimate:</td>
+        <td>${fmtMoney(g.totalLow)} – ${fmtMoney(g.totalHigh)}</td>
+      </tr>`;
+    }
   });
 
   calBody.innerHTML=confirmedHtml||'<tr><td colspan="5"><div class="empty-state" style="padding:1.5rem"><i class="ti ti-calendar"></i><p>No upcoming calendar events found.</p></div></td></tr>';
 
-  // ── Section 2: Owed partners not yet on calendar at all ──
   const owedEntries=Object.entries(clickExchangeData)
     .filter(([tab,d])=>d.diff2026>0&&!matchedTabsOverall.has(tab))
     .sort((a,b)=>b[1].diff2026-a[1].diff2026);
@@ -906,6 +912,7 @@ function refreshForecast(){
   let unschedHtml='';
   if(owedEntries.length){
     unschedHtml+=`<tr class="forecast-month-header"><td colspan="5">No date scheduled yet</td></tr>`;
+    let unschedTotalLow=0,unschedTotalHigh=0;
     owedEntries.forEach(([tab,d])=>{
       const rank=getLeaderboardRank(tab);
       const epcData=partnerEPC[tab];
@@ -915,6 +922,7 @@ function refreshForecast(){
       const estIncome=estimateIncome(estClicks,epc);
       const incomeStr=estIncome?fmtMoney(estIncome.low)+' – '+fmtMoney(estIncome.high):'N/A';
       const incomeSub=estIncome?'<span class="forecast-sub">EPC $'+epc.toFixed(2)+' × '+estClicks.toLocaleString()+' clicks, −15–20%</span>':'<span class="forecast-sub">No historical EPC data found (checked up to 4 years)</span>';
+      if(estIncome){unschedTotalLow+=estIncome.low;unschedTotalHigh+=estIncome.high;}
 
       unschedHtml+=`<tr>
         <td class="name-cell">${tab}</td>
@@ -924,6 +932,12 @@ function refreshForecast(){
         <td>${incomeStr}${incomeSub}</td>
       </tr>`;
     });
+    if(unschedTotalLow>0||unschedTotalHigh>0){
+      unschedHtml+=`<tr style="background:var(--bg-secondary);font-weight:600">
+        <td colspan="4" style="text-align:right;padding-right:16px">Total estimate if all scheduled:</td>
+        <td>${fmtMoney(unschedTotalLow)} – ${fmtMoney(unschedTotalHigh)}</td>
+      </tr>`;
+    }
   }
 
   unschedBody.innerHTML=unschedHtml||'<tr><td colspan="5"><div class="empty-state" style="padding:1.5rem"><i class="ti ti-check"></i><p>All owed partners already have mailings scheduled.</p></div></td></tr>';
