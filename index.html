@@ -124,6 +124,11 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
 .event-dot{width:8px;height:8px;border-radius:50%;background:#5b3fc4;flex-shrink:0;}
 .event-date-label{font-size:12px;font-weight:500;min-width:70px;color:var(--text-secondary);}
 .flag-section-header{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;padding:5px 10px;border-radius:6px;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.forecast-table{width:100%;border-collapse:collapse;font-size:13px;}
+.forecast-table th{font-size:10px;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);font-weight:500;padding:8px 10px;text-align:left;border-bottom:0.5px solid var(--border);background:var(--bg-secondary);white-space:nowrap;}
+.forecast-table td{padding:9px 10px;font-size:13px;border-bottom:0.5px solid var(--border);vertical-align:middle;}
+.forecast-table tr:last-child td{border-bottom:none;}
+.forecast-sub{font-size:10px;color:var(--text-secondary);display:block;margin-top:2px;}
 </style>
 </head>
 <body>
@@ -144,6 +149,7 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
   <button class="tab-btn" onclick="switchTab('inbound',this)"><i class="ti ti-inbox"></i> YOM26 Support</button>
   <button class="tab-btn" onclick="switchTab('outbound',this)"><i class="ti ti-send"></i> Outbound Requests</button>
   <button class="tab-btn" onclick="switchTab('onboarding',this)"><i class="ti ti-git-merge"></i> Onboarding Pipeline</button>
+  <button class="tab-btn" onclick="switchTab('forecast',this)"><i class="ti ti-chart-line"></i> Mailing Forecast</button>
   <button class="tab-btn" onclick="switchTab('calendar',this)"><i class="ti ti-calendar-month"></i> Calendar</button>
 </div>
 
@@ -237,6 +243,25 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg-secondary);
       <div class="table-wrap"><table><thead><tr><th>Name</th><th>Past/New</th><th>Notes</th></tr></thead>
       <tbody id="declinedTbody"><tr><td colspan="3"><div class="empty-state" style="padding:1rem"><p>Sync to load</p></div></td></tr></tbody></table></div>
     </div>
+  </div>
+</div>
+
+<div id="tab-forecast" style="display:none">
+  <div class="section-hdr"><div class="section-title">Mailing Forecast</div><div class="section-actions"><button class="btn" onclick="syncAllSheets()"><i class="ti ti-refresh"></i> Sync</button><button class="btn primary" onclick="exportForecast()"><i class="ti ti-download"></i> Export for Marci</button></div></div>
+  <div class="alert alert-info"><i class="ti ti-info-circle"></i> Confirmed mailings come from your calendar (excluding podcasts). Income estimates use each partner's EPC (commission ÷ clicks from their YOM section), ±15%.</div>
+  <div class="panel" style="margin-bottom:1rem">
+    <div class="panel-title"><div class="panel-title-left"><i class="ti ti-calendar-check"></i> Confirmed mailings</div></div>
+    <div class="table-wrap"><table class="forecast-table" id="forecastConfirmedTable">
+      <thead><tr><th>Timing</th><th>Affiliate</th><th>2026 Standing</th><th># Mailings</th><th>Repay/Advance</th><th>Anticipated Income</th></tr></thead>
+      <tbody id="forecastConfirmedTbody"><tr><td colspan="6"><div class="empty-state" style="padding:1.5rem"><i class="ti ti-refresh"></i><p>Sync to load</p></div></td></tr></tbody>
+    </table></div>
+  </div>
+  <div class="panel">
+    <div class="panel-title"><div class="panel-title-left"><i class="ti ti-calendar-plus"></i> Owed — not yet scheduled</div></div>
+    <div class="table-wrap"><table class="forecast-table" id="forecastUnscheduledTable">
+      <thead><tr><th>Affiliate</th><th>2026 Standing</th><th># Mailings Needed</th><th>Repay/Advance</th><th>Anticipated Income</th></tr></thead>
+      <tbody id="forecastUnscheduledTbody"><tr><td colspan="5"><div class="empty-state" style="padding:1.5rem"><i class="ti ti-refresh"></i><p>Sync to load</p></div></td></tr></tbody>
+    </table></div>
   </div>
 </div>
 
@@ -390,7 +415,7 @@ async function syncCalendar(){
   }
 }
 
-function refreshAll(){refreshPartners();refreshDash();refreshInbound();refreshOutbound();refreshOnboarding();renderCalendar();}
+function refreshAll(){refreshPartners();refreshDash();refreshInbound();refreshOutbound();refreshOnboarding();renderCalendar();refreshForecast();}
 
 function getLeaderboardRank(partnerName){
   const rows=sheetData.leaderboard||[];
@@ -402,6 +427,7 @@ function getLeaderboardRank(partnerName){
 }
 
 let clickExchangeData={};
+let partnerEPC={}; // {tabName: {epc, totalClicks, totalCommission}}
 function numVal(v){if(!v)return null;const n=parseFloat(String(v).replace(/[$,]/g,''));return isNaN(n)?null:n;}
 
 function refreshDash(){
@@ -420,9 +446,6 @@ function refreshDash(){
 function buildFlags(){
   const flagsEl=document.getElementById('dashFlags');
   const reqRows=sheetData.requests||[];
-
-  // Partners where their clicks for us > our clicks for them = we owe them
-  // diff = their - yom, so diff > 0 means we owe them
   const owedPartners=Object.entries(clickExchangeData)
     .filter(([,d])=>d.diff2026>0)
     .sort((a,b)=>b[1].diff2026-a[1].diff2026);
@@ -433,13 +456,11 @@ function buildFlags(){
   }
 
   const owedNames=owedPartners.map(([name])=>name.toLowerCase());
-
   function nameMatches(rowName,owedName){
     const words=owedName.split(' ').filter(w=>w.length>3);
     return words.some(w=>rowName.toLowerCase().includes(w));
   }
 
-  // Upcoming launches from Sheet 3 that match owed partners and have future dates
   const today=new Date();today.setHours(0,0,0,0);
   const upcomingOwed=reqRows.filter((r,i)=>{
     if(i===0||!r[0])return false;
@@ -460,8 +481,6 @@ function buildFlags(){
   });
 
   let html='';
-
-  // Section 1: Traffic owed table
   html+=`<div class="flag-section-header" style="color:#791F1F;background:#FCEBEB">
     <i class="ti ti-arrow-up-right" style="font-size:13px"></i>
     Traffic may be owed — ${owedPartners.length} partner${owedPartners.length>1?'s':''}
@@ -470,12 +489,8 @@ function buildFlags(){
     <div style="display:grid;grid-template-columns:1fr 90px 90px;font-size:10px;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);padding:6px 10px;background:var(--bg-secondary);border-bottom:0.5px solid var(--border)">
       <div>Partner</div><div style="text-align:right">2026 diff</div><div style="text-align:right">2025 diff</div>
     </div>`;
-
   owedPartners.forEach(([name,d])=>{
-    // 2026: diff > 0 = we owe them = show as negative (red)
     const d26='−'+d.diff2026.toLocaleString();
-    // 2025: diff > 0 = we owed them = red/negative display
-    //       diff < 0 = we were ahead = green/positive display
     const d25=d.diff2025===0?'—':d.diff2025>0?'−'+Math.abs(d.diff2025).toLocaleString():'+'+Math.abs(d.diff2025).toLocaleString();
     const c25=d.diff2025>0?'#A32D2D':d.diff2025<0?'#3B6D11':'var(--text-secondary)';
     html+=`<div style="display:grid;grid-template-columns:1fr 90px 90px;padding:8px 10px;border-bottom:0.5px solid var(--border);align-items:center;font-size:13px">
@@ -486,7 +501,6 @@ function buildFlags(){
   });
   html+='</div>';
 
-  // Section 2: Upcoming launches for owed partners
   if(upcomingOwed.length){
     html+=`<div class="flag-section-header" style="color:#854F0B;background:#FAEEDA">
       <i class="ti ti-calendar-event" style="font-size:13px"></i>
@@ -591,6 +605,8 @@ function refreshPartners(){
   const inRows=sheetData.inbound||[];
   const bRows=sheetData.outboundB||[];
   clickExchangeData={};
+  partnerEPC={};
+
   document.getElementById('partnerProfiles').innerHTML=ptabs.map(tab=>{
     const raw=sheetData.partnerStats?.[tab]||[];
     const yearBlocks=parsePartnerTab(raw);
@@ -601,7 +617,10 @@ function refreshPartners(){
     const yomEPC=inRow?inRow[25]:'—';
     const bMatch=bRows.filter(r=>r&&r[1]&&r[1].toLowerCase().includes(tabFirst));
     const pid='pp_'+tab.replace(/[^a-z0-9]/gi,'_');
+
     const exchData={their2026:0,yom2026:0,diff2026:0,their2025:0,yom2025:0,diff2025:0};
+    // EPC calculation: total YOM-side (col G-K) commission ÷ total YOM-side clicks, most recent year, fallback to average
+    let epcSamples=[];
     yearBlocks.forEach(yb=>{
       const their=numVal(yb.their.totals?.[1])||yb.their.rows.reduce((s,r)=>s+(numVal(r.clicks)||0),0);
       const yom=numVal(yb.yom.totals?.[7])||yb.yom.rows.reduce((s,r)=>s+(numVal(r.clicks)||0),0);
@@ -611,8 +630,25 @@ function refreshPartners(){
       }else{
         exchData.their2025=their;exchData.yom2025=yom;exchData.diff2025=diff;
       }
+      // YOM-side commission for EPC: col K = index 10 in totals row, or sum of rows col K (index 4 relative -> commission field)
+      const yomCommission=numVal(yb.yom.totals?.[10])||yb.yom.rows.reduce((s,r)=>s+(numVal(r.commission)||0),0);
+      if(yom>0&&yomCommission>0){
+        epcSamples.push({year:yb.year,clicks:yom,commission:yomCommission,epc:yomCommission/yom});
+      }
     });
+    // Most recent year's EPC, fallback to average of all samples
+    let epc=null;
+    if(epcSamples.length){
+      const sorted=epcSamples.sort((a,b)=>b.year-a.year);
+      epc=sorted[0].epc;
+      if(!epc||isNaN(epc)){
+        const avg=epcSamples.reduce((s,e)=>s+e.epc,0)/epcSamples.length;
+        epc=avg;
+      }
+    }
+    partnerEPC[tab]={epc:epc,samples:epcSamples};
     clickExchangeData[tab]=exchData;
+
     const yearsHtml=yearBlocks.length?yearBlocks.map(yb=>`
       <div class="year-block">
         <div class="year-label">${yb.year}</div>
@@ -622,6 +658,7 @@ function refreshPartners(){
         </div>
         ${renderExchangeBar(yb)}
       </div>`).join(''):'<div style="font-size:12px;color:var(--text-secondary);padding:8px">No launch data found in this tab.</div>';
+
     return`<div class="partner-profile" id="${pid}">
       <div class="partner-profile-header" onclick="toggleProfile(this)">
         <div class="partner-profile-name"><i class="ti ti-chevron-right" style="font-size:14px;transition:transform 0.2s;color:#5b3fc4"></i>${tab}</div>
@@ -638,7 +675,9 @@ function refreshPartners(){
       </div>
     </div>`;
   }).join('');
+
   buildFlags();
+  refreshForecast();
 }
 
 function toggleProfile(h){const b=h.nextElementSibling;const i=h.querySelector('i');b.classList.toggle('open');i.style.transform=b.classList.contains('open')?'rotate(90deg)':'';}
@@ -673,12 +712,12 @@ function filterOnboarding(v){['confirmedTbody','declinedTbody'].forEach(id=>{doc
 function filterOnboardingByStatus(v){document.getElementById('confirmedPanel').style.display=(v===''||v==='confirmed')?'':'none';document.getElementById('declinedPanel').style.display=(v===''||v==='declined')?'':'none';}
 
 function filterCalendarEvents(v){
-  const val=v.toLowerCase();
+  const val=v.trim().toLowerCase();
   document.querySelectorAll('.event-list-item').forEach(el=>{
-    el.style.display=el.textContent.toLowerCase().includes(val)?'':'none';
+    el.style.display=!val||el.textContent.toLowerCase().includes(val)?'':'none';
   });
   document.querySelectorAll('.cal-entry').forEach(el=>{
-    el.style.opacity=!val||el.textContent.toLowerCase().includes(val)?'1':'0.15';
+    el.style.opacity=!val||el.title.toLowerCase().includes(val)?'1':'0.15';
   });
 }
 
@@ -706,10 +745,162 @@ function renderCalendar(){
 function prevMonth(){calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
 function nextMonth(){calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCalendar();}
 function switchTab(name,btn){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');showTab(name);}
-function showTab(name){document.querySelectorAll('[id^="tab-"]').forEach(el=>el.style.display='none');const el=document.getElementById('tab-'+name);if(el)el.style.display='block';if(name==='calendar')renderCalendar();}
+function showTab(name){document.querySelectorAll('[id^="tab-"]').forEach(el=>el.style.display='none');const el=document.getElementById('tab-'+name);if(el)el.style.display='block';if(name==='calendar')renderCalendar();if(name==='forecast')refreshForecast();}
 function switchTabByName(name){document.querySelectorAll('.tab-btn').forEach(btn=>{if(btn.getAttribute('onclick')?.includes("'"+name+"'"))btn.click();});}
 function filterTable(id,v,col){document.querySelectorAll('#'+id+' tr').forEach(r=>{r.style.display=(r.cells[col]?.textContent||'').toLowerCase().includes(v.toLowerCase())?'':'none';});}
 function filterTableByCol(id,v,col){if(!v){document.querySelectorAll('#'+id+' tr').forEach(r=>r.style.display='');return;}document.querySelectorAll('#'+id+' tr').forEach(r=>{r.style.display=(r.cells[col]?.textContent||'').toLowerCase().includes(v.toLowerCase())?'':'none';});}
+
+// ── MAILING FORECAST ──────────────────────────────────────
+function findPartnerByFuzzyName(searchName){
+  const ptabs=sheetData.partnerTabs||[];
+  const searchLower=searchName.toLowerCase();
+  const searchWords=searchLower.split(/[\s\(\)]+/).filter(w=>w.length>2);
+  let best=null;
+  for(const tab of ptabs){
+    const tabLower=tab.toLowerCase();
+    const tabWords=tabLower.split(' ').filter(w=>w.length>2);
+    if(tabWords.some(tw=>searchWords.some(sw=>sw.includes(tw)||tw.includes(sw)))){
+      best=tab;break;
+    }
+  }
+  return best;
+}
+
+function estimateMailingsNeeded(clicksOwed){
+  if(!clicksOwed||clicksOwed<=0)return 0;
+  return Math.ceil(clicksOwed/500);
+}
+
+function estimateIncome(mailingsCount,epc){
+  if(!epc||!mailingsCount)return null;
+  const estClicks=mailingsCount*500;
+  const mid=estClicks*epc;
+  return {low:mid*0.85,high:mid*1.15,estClicks,epc};
+}
+
+function fmtMoney(n){
+  if(n===null||n===undefined||isNaN(n))return '—';
+  return '$'+Math.round(n).toLocaleString();
+}
+
+function refreshForecast(){
+  const calBody=document.getElementById('forecastConfirmedTbody');
+  const unschedBody=document.getElementById('forecastUnscheduledTbody');
+  if(!calBody||!unschedBody)return;
+
+  const ptabs=sheetData.partnerTabs||[];
+  if(!ptabs.length){
+    calBody.innerHTML='<tr><td colspan="6"><div class="empty-state" style="padding:1.5rem"><i class="ti ti-refresh"></i><p>Sync your sheets to load forecast</p></div></td></tr>';
+    unschedBody.innerHTML='<tr><td colspan="5"><div class="empty-state" style="padding:1.5rem"><i class="ti ti-refresh"></i><p>Sync your sheets to load forecast</p></div></td></tr>';
+    return;
+  }
+
+  // ── Section 1: Confirmed mailings from calendar ──
+  const now=new Date();
+  const upcomingEvents=calEvents
+    .filter(e=>new Date(e.date+'T00:00:00')>=now)
+    .filter(e=>!e.title.toLowerCase().includes('podcast'))
+    .sort((a,b)=>a.date.localeCompare(b.date));
+
+  const matchedTabs=new Set();
+  let confirmedHtml='';
+
+  upcomingEvents.forEach(e=>{
+    const d=new Date(e.date+'T00:00:00');
+    const monthLabel=MONTHS[d.getMonth()];
+    const matchedTab=findPartnerByFuzzyName(e.title);
+
+    if(matchedTab){
+      matchedTabs.add(matchedTab);
+      const rank=getLeaderboardRank(matchedTab);
+      const exch=clickExchangeData[matchedTab];
+      const epcData=partnerEPC[matchedTab];
+      const epc=epcData?epcData.epc:null;
+
+      const owed=exch&&exch.diff2026>0?exch.diff2026:0;
+      const mailingsForThisOwed=estimateMailingsNeeded(owed);
+      const estIncome=estimateIncome(1,epc); // single mailing estimate for this calendar event
+
+      const repayLabel=owed>0?'Repay (owe '+owed.toLocaleString()+' clicks)':'—';
+      const incomeStr=estIncome?fmtMoney(estIncome.low)+' – '+fmtMoney(estIncome.high):'N/A';
+      const incomeSub=estIncome?'<span class="forecast-sub">EPC $'+epc.toFixed(2)+' × ~500 clicks</span>':'';
+
+      confirmedHtml+=`<tr>
+        <td>${monthLabel}</td>
+        <td class="name-cell" style="max-width:220px">${e.title}</td>
+        <td>${rank?'#'+rank:'N/A'}</td>
+        <td>1</td>
+        <td>${repayLabel}</td>
+        <td>${incomeStr}${incomeSub}</td>
+      </tr>`;
+    } else {
+      // No partner match — internal event or unrecognized
+      confirmedHtml+=`<tr>
+        <td>${monthLabel}</td>
+        <td class="name-cell" style="max-width:220px">${e.title}</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>N/A</td>
+      </tr>`;
+    }
+  });
+
+  calBody.innerHTML=confirmedHtml||'<tr><td colspan="6"><div class="empty-state" style="padding:1.5rem"><i class="ti ti-calendar"></i><p>No upcoming calendar events found.</p></div></td></tr>';
+
+  // ── Section 2: Owed partners not yet on calendar ──
+  const owedEntries=Object.entries(clickExchangeData)
+    .filter(([tab,d])=>d.diff2026>0&&!matchedTabs.has(tab))
+    .sort((a,b)=>b[1].diff2026-a[1].diff2026);
+
+  let unschedHtml='';
+  owedEntries.forEach(([tab,d])=>{
+    const rank=getLeaderboardRank(tab);
+    const epcData=partnerEPC[tab];
+    const epc=epcData?epcData.epc:null;
+    const mailingsNeeded=estimateMailingsNeeded(d.diff2026);
+    const estIncome=estimateIncome(mailingsNeeded,epc);
+    const incomeStr=estIncome?fmtMoney(estIncome.low)+' – '+fmtMoney(estIncome.high):'N/A';
+    const incomeSub=estIncome?'<span class="forecast-sub">EPC $'+epc.toFixed(2)+' × '+estIncome.estClicks.toLocaleString()+' clicks</span>':'';
+
+    unschedHtml+=`<tr>
+      <td class="name-cell">${tab}</td>
+      <td>${rank?'#'+rank:'N/A'}</td>
+      <td>${mailingsNeeded}</td>
+      <td>Repay (owe ${d.diff2026.toLocaleString()} clicks)</td>
+      <td>${incomeStr}${incomeSub}</td>
+    </tr>`;
+  });
+
+  unschedBody.innerHTML=unschedHtml||'<tr><td colspan="5"><div class="empty-state" style="padding:1.5rem"><i class="ti ti-check"></i><p>All owed partners already have mailings scheduled.</p></div></td></tr>';
+}
+
+function exportForecast(){
+  const rows=[];
+  rows.push(['Timing','Affiliate','2026 Standing','# Mailings','Repay/Advance','Anticipated Income']);
+  document.querySelectorAll('#forecastConfirmedTbody tr').forEach(tr=>{
+    const cells=Array.from(tr.querySelectorAll('td')).map(td=>td.textContent.trim().replace(/\s+/g,' '));
+    if(cells.length===6)rows.push(cells);
+  });
+  rows.push([]);
+  rows.push(['Owed — Not Yet Scheduled']);
+  rows.push(['Affiliate','2026 Standing','# Mailings Needed','Repay/Advance','Anticipated Income']);
+  document.querySelectorAll('#forecastUnscheduledTbody tr').forEach(tr=>{
+    const cells=Array.from(tr.querySelectorAll('td')).map(td=>td.textContent.trim().replace(/\s+/g,' '));
+    if(cells.length===5)rows.push(cells);
+  });
+
+  const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='mailing_forecast_'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
 </script>
 </body>
 </html>
