@@ -343,8 +343,13 @@ async function sheetTabs(id){
 }
 async function firstTabValues(id,range='A1:Z500'){
   const t=await sheetTabs(id);
-  try{return await sheetValues(id,`Sheet1!${range}`);}
-  catch{return t.length?await sheetValues(id,`'${t[0]}'!${range}`):[]; }
+  if(!t.length)return [];
+  try{
+    return await sheetValues(id,`'${t[0]}'!${range}`);
+  }catch(e){
+    console.warn('firstTabValues failed for tab',t[0],e);
+    return [];
+  }
 }
 
 function setSS(state,label){
