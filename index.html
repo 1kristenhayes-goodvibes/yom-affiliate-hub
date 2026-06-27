@@ -368,10 +368,8 @@ async function syncAllSheets(){
     sheetData.inbound=await firstTabValues(SID.inbound,'A1:AH500');
     await new Promise(r=>setTimeout(r,500));
     try{
-      const lbTabs=await sheetTabs(SID.inbound);
-      const lbTab=lbTabs.find(t=>t.toLowerCase().includes('final affiliate')||t.toLowerCase().includes('2026 - final'));
-      if(lbTab)sheetData.leaderboard=await sheetValues(SID.inbound,`'${lbTab}'!A1:B200`);
-    }catch(e){console.warn('Leaderboard tab not found:',e);}
+  sheetData.leaderboard=await sheetValues(SID.inbound,`'2026'!A1:B200`);
+}catch(e){console.warn('Leaderboard tab not found:',e);}
     await new Promise(r=>setTimeout(r,500));
     sheetData.requests=await firstTabValues(SID.requests,'A1:J500');
     await new Promise(r=>setTimeout(r,500));
